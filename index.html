@@ -3,30 +3,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEWS 7AMPM - Live Quiz & Daily GK Portal</title>
-  <link rel="stylesheet" href="style.css">
+  <title>QUIZ 7AMPM - Live Contest & GK Hub</title>
+
+  <!-- ==========================================
+       ALL CSS STYLES EMBEDDED DIRECTLY
+       (No external style.css needed)
+       ========================================== -->
+  <style>
+    :root {
+      --bg-dark: #090c12;
+      --card-bg: rgba(20, 25, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #e50914;
+      --accent: #ffd700;
+      --accent-glow: rgba(255, 215, 0, 0.35);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --info: #3b82f6;
+      --dock-bg: rgba(14, 18, 27, 0.95);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding-bottom: 85px;
+      overflow-x: hidden;
+    }
+
+    /* Top Sticky Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 12, 18, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      background: linear-gradient(135deg, var(--primary), #ff5722);
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+
+    .brand-text h1 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .brand-text p {
+      font-size: 10px;
+      color: var(--accent);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(229, 9, 20, 0.15);
+      border: 1px solid var(--primary);
+      color: #ff4d4d;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulseAnim 1.2s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+
+    .menu-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-size: 18px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Side Drawer Menu */
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 270px;
+      height: 100vh;
+      background: #111522;
+      border-left: 1px solid var(--card-border);
+      z-index: 200;
+      transition: right 0.3s ease;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .side-drawer.open {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    .drawer-nav a {
+      display: block;
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 10px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    /* Container */
+    .main-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Hero Section */
+    .hero-card {
+      background: linear-gradient(135deg, rgba(20, 25, 42, 0.95) 0%, rgba(10, 13, 20, 0.98) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px 18px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-card h2 {
+      font-size: 19px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .hero-card h2 span {
+      color: var(--accent);
+    }
+
+    .hero-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: 0.15s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-accent { background: var(--accent); color: #000; font-weight: 800; }
+    .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--card-border); }
+
+    /* Expandable Accordion Box */
+    .announcement-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .announcement-bar {
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .announcement-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .announcement-body {
+      display: none;
+      background: rgba(10, 14, 22, 0.7);
+      padding: 14px;
+      border-top: 1px solid var(--card-border);
+    }
+    .announcement-body.active {
+      display: block;
+    }
+
+    /* Embedded Iframe Container */
+    .iframe-embed-box {
+      width: 100%;
+      height: 540px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      background: #fff;
+      margin-top: 10px;
+    }
+    .iframe-embed-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* 2x2 Feature Grid Boxes */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    .square-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .square-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .square-icon { font-size: 24px; }
+    .square-card h3 { font-size: 15px; color: #fff; font-weight: 800; }
+    .square-card p { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Public Live Sheet Display Section */
+    .public-sheet-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .sheet-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Mobile Bottom Floating Dock */
+    .bottom-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--dock-bg);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 6px;
+      z-index: 100;
+    }
+
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .dock-item.active,
+    .dock-item:hover { color: var(--accent); }
+    .dock-icon { font-size: 18px; }
+
+    /* Footer */
+    .app-footer {
+      text-align: center;
+      padding: 20px 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
+  <!-- ================= TOP HEADER ================= -->
   <header class="app-header">
     <div class="brand-wrap">
       <div class="brand-logo">7AMPM</div>
       <div class="brand-text">
         <h1>QUIZ CONTEST</h1>
-        <p>Live & Daily Knowledge Hub</p>
+        <p>Live & Daily Knowledge Portal</p>
       </div>
     </div>
     <div class="header-right">
-      <div class="live-indicator" id="liveStatusBadge">
+      <div class="live-indicator">
         <span class="pulse-dot"></span>
-        <span id="liveStatusText">CONNECTING...</span>
+        <span>🔴 CONTEST LIVE</span>
       </div>
       <button class="menu-toggle-btn" onclick="toggleDrawer()">☰</button>
     </div>
   </header>
 
-  <!-- Side Navigation Drawer -->
+  <!-- ================= SIDE DRAWER ================= -->
   <aside class="side-drawer" id="sideDrawer">
     <div class="drawer-header">
       <h3 style="color: var(--accent);">Menu</h3>
@@ -36,108 +398,135 @@
       <a href="index.html">🏠 होमपेज (Home)</a>
       <a href="Quizpage.html">🎯 डेली क्विज़ कार्ड्स (Play Quiz)</a>
       <a href="#contestSection">🔴 लाइव क्विज़ कॉन्टेस्ट (Contest Hub)</a>
-      <a href="#feedSection">📋 लाइव सबमिशन लिस्ट (Live Feed)</a>
-      <a href="admin.html">🔐 होस्ट / एडमिन पैनल (Admin)</a>
+      <a href="#publicSheetSection">📋 लाइव सबमिशन शीट (Public Sheet)</a>
+      <a href="admin.html">🔐 एडमिन / विनर ड्रॉ पैनल (Admin)</a>
     </nav>
   </aside>
 
-  <!-- Main Container -->
+  <!-- ================= MAIN CONTENT ================= -->
   <main class="main-wrapper">
 
-    <!-- Hero Card -->
+    <!-- 1. Hero Card -->
     <section class="hero-card">
       <h2>भारत का नंबर 1 <span>लाइव क्विज़ प्रतियोगिता</span> पोर्टल</h2>
-      <p>YouTube लाइव के दौरान पूछे गए सवालों के जवाब सीधे Google Form के ज़रिए सबमिट करें और लकी ड्रॉ में भाग लें।</p>
+      <p>YouTube लाइव स्ट्रीम में दिख रहे Question Code को भरें और हर सवाल पर लकी विनर बनने का मौका पाएं!</p>
       <div class="hero-actions">
         <a href="#contestSection" class="btn btn-primary">🔴 Join Today's Live</a>
         <a href="Quizpage.html" class="btn btn-accent">🎯 Practice Daily Quiz Cards</a>
       </div>
     </section>
 
-    <!-- Expandable Live Contest & Announcement Section -->
+    <!-- 2. Expandable Announcement & Google Form Hub -->
     <section class="announcement-box" id="contestSection">
       <div class="announcement-bar" onclick="toggleAnnouncement()">
         <div class="announcement-title">
           <span>📢</span>
-          <span id="announcementHeadline">आगामी लाइव क्विज़ प्रतियोगिता: नियम व फॉर्म लिंक</span>
+          <span>लाइव क्विज़ प्रतियोगिता: उत्तर फ़ॉर्म (Google Form)</span>
         </div>
-        <span id="expandIcon" style="font-size: 14px; color: var(--accent);">▼ विस्तार से देखें</span>
+        <span id="expandIcon" style="font-size: 13px; color: var(--accent);">▼ फ़ॉर्म खोलें</span>
       </div>
+
       <div class="announcement-body" id="announcementBody">
-        <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 10px;" id="contestNoticeDetails">
-          🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाए गए <em>Question Code (जैसे QC-101)</em> को नीचे दिए गए फॉर्म में भरें और 60 सेकंड के भीतर सही विकल्प चुनकर सबमिट करें।
+        <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+          🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाया गया <em>Question Code (उदा. QC-101, QC-102)</em> लिखें और 60 सेकंड के भीतर विकल्प चुनकर सबमिट करें।
         </p>
-        <div class="form-embed-wrapper">
-          <a href="https://forms.gle/Zq6u4SUzHKr4xFUr6" target="_blank" id="googleFormActionBtn" class="btn btn-accent" style="width: 100%; justify-content: center;">
-            📝 Google Form में उत्तर सबमिट करें (Open Form)
+
+        <!-- ==============================================================
+             GOOGLE FORM OPTION 1: EMBEDDED INSIDE HOMEPAGE (IFRAME)
+             (अगर अंदर नहीं दिखाना हो, तो इस पूरे <div> को डिलीट या कमेंट कर दें)
+             ============================================================== -->
+        <div class="iframe-embed-box">
+          <!-- ⚠️ नीचे src="" में अपने Google Form का लिंक डालें (अंत में ?embedded=true ज़रूर रखें) -->
+          <iframe 
+            src="https://forms.gle/Zq6u4SUzHKr4xFUr6" ?embedded=true;
+            title="Quiz Contest Google Form">
+            लोड हो रहा है…
+          </iframe>
+        </div>
+
+        <!-- ==============================================================
+             GOOGLE FORM OPTION 2: OPEN IN NEW TAB BUTTON
+             (क्लिक करने पर Google Form नए टैब में पूरा बड़ा खुलेगा)
+             ============================================================== --
+        <div style="margin-top: 12px; text-align: center;">
+          <!-- ⚠️ नीचे href="" में अपना Google Form का Short URL पेस्ट करें --
+          <a href="https://forms.gle/Zq6u4SUzHKr4xFUr6" target="_blank" class="btn btn-secondary" style="font-size: 12px; width: 100%; justify-content: center;">
+            ↗️ Google Form को अलग विंडो/टैब में खोलें (Open in New Tab)
           </a>
         </div>
+        -->
       </div>
     </section>
 
-    <!-- 2x2 Feature Square Grid Boxes -->
+    <!-- 3. Feature Square Grid (2x2) -->
     <section class="feature-grid">
       <a href="Quizpage.html" class="square-card">
         <div class="square-icon">⏱️</div>
         <h3>Play Web Quiz</h3>
-        <p>टाइमर और साउंड इफ़ेक्ट्स के साथ KBC स्टाइल सवालों की प्रैक्टिस करें।</p>
+        <p>टाइमर और साउंड इफ़ेक्ट्स के साथ KBC स्टाइल सवालों की ऑनलाइन प्रैक्टिस करें।</p>
       </a>
 
-      <a href="Quizpage.html?mode=simple" class="square-card">
+      <a href="Quizpage.html" class="square-card">
         <div class="square-icon">🗂️</div>
         <h3>Flash Cards</h3>
-        <p>बिना टाइमर के तेज़ रिवीज़न और तुरंत सही जवाब की जांच करें।</p>
+        <p>बिना किसी टाइमर के तुरंत सही जवाब और व्याख्या देखने के लिए कार्ड्स पढ़ें।</p>
       </a>
 
       <a href="Quizpage.html" class="square-card">
         <div class="square-icon">📰</div>
         <h3>Current Affairs</h3>
-        <p>तारीख़ के अनुसार राष्ट्रीय और अंतर्राष्ट्रीय समसामयिक प्रश्नोत्तरी।</p>
+        <p>दैनिक राष्ट्रीय और अंतर्राष्ट्रीय समसामयिक महत्वपूर्ण प्रश्नोत्तरी।</p>
       </a>
 
-      <a href="#feedSection" class="square-card">
+      <a href="#publicSheetSection" class="square-card">
         <div class="square-icon">🏆</div>
         <h3>Live Leaderboard</h3>
         <p>लाइव स्ट्रीम के प्रतिभागियों की सबमिशन स्थिति और विनर ड्रॉ देखें।</p>
       </a>
     </section>
 
-    <!-- Public Live Submissions Transparency Table -->
-    <section class="live-feed-section" id="feedSection">
-      <div class="feed-header">
-        <h3>📋 हालिया सबमिशन (Live Answers Feed)</h3>
-        <button class="btn btn-secondary mini-btn" onclick="fetchLiveSubmissions()" style="font-size: 11px; padding: 4px 8px;">🔄 Refresh</button>
+    <!-- 4. Public Google Sheet Section (Live Transparency Hub) -->
+    <section class="public-sheet-section" id="publicSheetSection">
+      <div class="sheet-section-header">
+        <h3 style="font-size: 15px; color: var(--accent);">📋 लाइव सबमिशन स्थिति (Public Sheet)</h3>
+        
+        <!-- ==============================================================
+             PUBLIC SHEET OPTION 1: OPEN IN NEW WINDOW BUTTON
+             ============================================================== -->
+        <!-- ⚠️ नीचे href="" में अपनी Public Sheet का View-Only लिंक पेस्ट करें -->
+        <a href="https://docs.google.com/spreadsheets/d/1jV4c9vL8Lk3ZI9ySxRgjlFod3DuQLBTFRQYnZ5mKDxs/edit?usp=sharing" target="_blank" class="btn btn-secondary" style="font-size: 11px; padding: 5px 10px;">
+          ↗️ शीट को अलग विंडो में खोलें
+        </a>
       </div>
-      <div class="table-responsive">
-        <table class="live-table">
-          <thead>
-            <tr>
-              <th>#Sr</th>
-              <th>Question Code</th>
-              <th>प्रतिभागी का नाम (Name)</th>
-              <th>चुना गया विकल्प</th>
-            </tr>
-          </thead>
-          <tbody id="liveSubmissionsBody">
-            <tr>
-              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 16px;">
-                डेटा लोड हो रहा है या अभी कोई सबमिशन नहीं हुआ है...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+        🔒 सुरक्षा नोट: इस पब्लिक शीट में केवल समय, Question Code, नाम और विकल्प दिखता है। मोबाइल नंबर पूरी तरह सुरक्षित और गुप्त रहता है।
+      </p>
+
+      <!-- ==============================================================
+           PUBLIC SHEET OPTION 2: EMBEDDED DIRECTLY ON HOMEPAGE
+           (अगर अंदर शीट नहीं दिखानी हो, तो इस <div> को हटा सकते हैं)
+           ============================================================== -->
+      <div class="iframe-embed-box" style="height: 400px; background: #0a0d14;">
+        <!-- ⚠️ नीचे src="" में अपनी Public Sheet का Embed URL डालें:
+             (File > Share > Publish to web > Embed > Sheet1 चुनकर मिला लिंक) -->
+        <iframe 
+          src="https://docs.google.com/spreadsheets/d/e/YOUR_PUBLIC_PUBLISH_ID/pubhtml?widget=true&amp;headers=false" 
+          title="Public Submissions Live Sheet">
+          पब्लिक शीट लोड हो रही है…
+        </iframe>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
+  <!-- ================= FOOTER ================= -->
   <footer class="app-footer">
-    <p>© 2026 NEWS 7AMPM Studio. All rights reserved.</p>
+    <p>© 2026 QUIZ 7AMPM. All rights reserved.</p>
     <p style="margin-top: 4px;">Designed for High-Speed Live YouTube Quizzes & Education.</p>
   </footer>
 
-  <!-- Fixed Mobile Bottom Dock -->
+  <!-- ================= MOBILE FLOATING DOCK ================= -->
   <nav class="bottom-dock">
     <a href="index.html" class="dock-item active">
       <span class="dock-icon">🏠</span>
@@ -151,12 +540,31 @@
       <span class="dock-icon">🔴</span>
       <span>Contest</span>
     </a>
-    <a href="#feedSection" class="dock-item">
+    <a href="#publicSheetSection" class="dock-item">
       <span class="dock-icon">📋</span>
-      <span>Feed</span>
+      <span>Sheet</span>
     </a>
   </nav>
 
-  <script src="indexengine.js"></script>
+  <!-- ================= INLINE JAVASCRIPT LOGIC ================= -->
+  <script>
+    // 1. Navigation Drawer Toggle
+    function toggleDrawer() {
+      const drawer = document.getElementById('sideDrawer');
+      drawer.classList.toggle('open');
+    }
+
+    // 2. Expandable Accordion Toggle
+    function toggleAnnouncement() {
+      const body = document.getElementById('announcementBody');
+      const icon = document.getElementById('expandIcon');
+      body.classList.toggle('active');
+      if (body.classList.contains('active')) {
+        icon.innerText = "▲ फ़ॉर्म बंद करें";
+      } else {
+        icon.innerText = "▼ फ़ॉर्म खोलें";
+      }
+    }
+  </script>
 </body>
 </html>
