@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWS 7AMPM - Interactive Quiz Card Player</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .player-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .card-viewport {
+      width: 100%;
+      max-width: 380px;
+      min-height: 520px;
+      background: radial-gradient(circle at 50% 20%, #171c2c 0%, #0a0d14 100%);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+    .card-top {
+      padding: 12px 14px;
+      background: rgba(10, 13, 20, 0.85);
+      border-bottom: 2px solid var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      justify-content: center;
+    }
+    .q-text-box {
+      background: rgba(22, 28, 44, 0.85);
+      border-left: 4px solid var(--accent);
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .timer-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin: 6px 0;
+    }
+    .timer-svg {
+      width: 50px;
+      height: 50px;
+      transform: rotate(-90deg);
+    }
+    .timer-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 5;
+    }
+    .timer-circle-prog {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 138;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.1s linear, stroke 0.2s;
+    }
+    .timer-val {
+      position: absolute;
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .options-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .opt-item {
+      background: rgba(24, 30, 48, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .opt-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #333d56;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .opt-item.correct-glow {
+      background: rgba(16, 185, 129, 0.25) !important;
+      border-color: var(--success) !important;
+      color: #fff !important;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+    .opt-item.correct-glow .opt-letter {
+      background: var(--success);
+      color: #fff;
+    }
+    .opt-item.wrong-dim {
+      opacity: 0.35;
+    }
+    .card-footer {
+      padding: 8px 14px;
+      background: rgba(10, 13, 20, 0.9);
+      border-top: 1px solid var(--card-border);
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+    .controls-panel {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand-wrap">
+      <a href="index.html" style="text-decoration: none;" class="brand-logo">← HOME</a>
+      <div class="brand-text">
+        <h1>QUIZ PLAYER</h1>
+        <p>Interactive Card Mode</p>
+      </div>
+    </div>
+    <div style="font-size: 12px; color: var(--accent); font-weight: 800;" id="cardIndexIndicator">1 / 1</div>
+  </header>
+
+  <main class="main-wrapper player-wrap">
+
+    <!-- Interactive Quiz Card -->
+    <div class="card-viewport" id="cardViewport">
+      <div class="card-top">
+        <span class="badge-qc" id="displayQCode">QC-101</span>
+        <span style="font-size: 11px; font-weight: 700; color: #cbd5e1;" id="displayCategory">General Knowledge</span>
+      </div>
+
+      <div class="card-content">
+        <div class="q-text-box" id="displayQuestion">
+          सवाल लोड हो रहा है...
+        </div>
+
+        <!-- Timer Circle -->
+        <div class="timer-wrap" id="timerContainer">
+          <svg class="timer-svg" viewBox="0 0 52 52">
+            <circle class="timer-circle-bg" cx="26" cy="26" r="22"></circle>
+            <circle class="timer-circle-prog" id="timerProgCircle" cx="26" cy="26" r="22"></circle>
+          </svg>
+          <div class="timer-val" id="timerValText">5</div>
+        </div>
+
+        <!-- Options Container -->
+        <div class="options-stack" id="optionsContainer">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <span>NEWS 7AMPM GK</span>
+        <span id="footerModeText">PRACTICE MODE</span>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-panel">
+      <button class="btn btn-secondary" onclick="prevCard()">◀ पिछला</button>
+      <button class="btn btn-accent" id="playAudioBtn" onclick="playCurrentCardAudio()">🔊 Play Audio</button>
+      <button class="btn btn-primary" onclick="nextCard()">अगला ▶</button>
+    </div>
+
+  </main>
+
+  <script>
+    let quizData = [];
+    let curIndex = 0;
+    let timerTimer = null;
+    let isSpeaking = false;
+
+    async function loadQuizData() {
+      try {
+        const res = await fetch('quizoption.json');
+        quizData = await res.json();
+        renderCard(0);
+      } catch (e) {
+        document.getElementById('displayQuestion').innerText = "quizoption.json लोड नहीं हो सका।";
+      }
+    }
+
+    function renderCard(idx) {
+      clearInterval(timerTimer);
+      if (window.speechSynthesis) speechSynthesis.cancel();
+
+      if (!quizData || quizData.length === 0) return;
+      curIndex = idx;
+
+      const item = quizData[curIndex];
+      document.getElementById('cardIndexIndicator').innerText = `${curIndex + 1} / ${quizData.length}`;
+      document.getElementById('displayQCode').innerText = item.qCode || `QC-${curIndex + 1}`;
+      document.getElementById('displayCategory').innerText = item.category || "General Knowledge";
+      document.getElementById('displayQuestion').innerText = item.question;
+
+      // Render Options
+      const optBox = document.getElementById('optionsContainer');
+      optBox.innerHTML = "";
+
+      item.options.forEach(opt => {
+        const div = document.createElement('div');
+        div.className = 'opt-item';
+        div.id = `opt-${opt.letter}`;
+        div.innerHTML = `<span class="opt-letter">${opt.letter}</span> <span>${opt.text}</span>`;
+        div.onclick = () => revealAnswer(item.correct);
+        optBox.appendChild(div);
+      });
+
+      // Reset Timer Visual
+      const prog = document.getElementById('timerProgCircle');
+      prog.style.strokeDashoffset = '0';
+      prog.style.stroke = 'var(--accent)';
+      document.getElementById('timerValText').innerText = "5";
+    }
+
+    function revealAnswer(correctAns) {
+      const item = quizData[curIndex];
+      item.options.forEach(o => {
+        const el = document.getElementById(`opt-${o.letter}`);
+        if (!el) return;
+        if (o.letter === correctAns) {
+          el.classList.add('correct-glow');
+        } else {
+          el.classList.add('wrong-dim');
+        }
+      });
+    }
+
+    function nextCard() {
+      if (quizData.length === 0) return;
+      curIndex = (curIndex + 1) % quizData.length;
+      renderCard(curIndex);
+    }
+
+    function prevCard() {
+      if (quizData.length === 0) return;
+      curIndex = (curIndex - 1 + quizData.length) % quizData.length;
+      renderCard(curIndex);
+    }
+
+    // Audio Playback & 5s Timer
+    async function playCurrentCardAudio() {
+      if (isSpeaking) {
+        if (window.speechSynthesis) speechSynthesis.cancel();
+        clearInterval(timerTimer);
+        isSpeaking = false;
+        document.getElementById('playAudioBtn').innerText = "🔊 Play Audio";
+        return;
+      }
+
+      isSpeaking = true;
+      document.getElementById('playAudioBtn').innerText = "⏹ Stop";
+      const item = quizData[curIndex];
+
+      // Read Question
+      await speakAsync(`सवाल: ${item.question}`);
+      for (let o of item.options) {
+        if (!isSpeaking) break;
+        await speakAsync(`विकल्प ${o.letter}: ${o.text}`);
+      }
+
+      if (isSpeaking) {
+        await runTimerAsync(5);
+        revealAnswer(item.correct);
+        const correctObj = item.options.find(o => o.letter === item.correct);
+        await speakAsync(`सही उत्तर है विकल्प ${item.correct}: ${correctObj ? correctObj.text : ''}`);
+      }
+
+      isSpeaking = false;
+      document.getElementById('playAudioBtn').innerText = "🔊 Play Audio";
+    }
+
+    function runTimerAsync(sec) {
+      return new Promise(resolve => {
+        let left = sec;
+        const circle = document.getElementById('timerProgCircle');
+        const txt = document.getElementById('timerValText');
+        const circumference = 138;
+
+        timerTimer = setInterval(() => {
+          left--;
+          txt.innerText = left;
+          const offset = circumference - (left / sec) * circumference;
+          circle.style.strokeDashoffset = offset;
+          if (left <= 2) circle.style.stroke = 'var(--primary)';
+
+          if (left <= 0) {
+            clearInterval(timerTimer);
+            resolve();
+          }
+        }, 1000);
+      });
+    }
+
+    function speakAsync(text) {
+      return new Promise(resolve => {
+        if (!("speechSynthesis" in window)) { resolve(); return; }
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "hi-IN";
+        u.rate = 1.1;
+        u.onend = resolve;
+        u.onerror = resolve;
+        speechSynthesis.speak(u);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', loadQuizData);
+  </script>
+</body>
+</html>
