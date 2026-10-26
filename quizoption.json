@@ -1,0 +1,54 @@
+[
+  {
+    "qCode": "QC-101",
+    "category": "National GK",
+    "question": "भारत का राष्ट्रीय जलीय जीव कौन-सा घोषित किया गया है?",
+    "options": [
+      { "letter": "A", "text": "नीली व्हेल" },
+      { "letter": "B", "text": "समुद्री कछुआ" },
+      { "letter": "C", "text": "मगरमच्छ" },
+      { "letter": "D", "text": "गंगा नदी डॉल्फिन" }
+    ],
+    "correct": "D",
+    "explanation": "गंगा नदी डॉल्फिन को 2009 में भारत का राष्ट्रीय जलीय जीव घोषित किया गया था।"
+  },
+  {
+    "qCode": "QC-102",
+    "category": "Astronomy",
+    "question": "हमारे सौरमंडल का सबसे बड़ा ग्रह कौन-सा है?",
+    "options": [
+      { "letter": "A", "text": "शनि" },
+      { "letter": "B", "text": "मंगल" },
+      { "letter": "C", "text": "पृथ्वी" },
+      { "letter": "D", "text": "बृहस्पति" }
+    ],
+    "correct": "D",
+    "explanation": "बृहस्पति (Jupiter) सौरमंडल का सबसे विशालकाय ग्रह है।"
+  },
+  {
+    "qCode": "QC-103",
+    "category": "Indian Polity",
+    "question": "भारतीय संविधान को पूर्ण रूप से किस दिन लागू किया गया था?",
+    "options": [
+      { "letter": "A", "text": "15 अगस्त 1947" },
+      { "letter": "B", "text": "26 नवंबर 1949" },
+      { "letter": "C", "text": "26 जनवरी 1950" },
+      { "letter": "D", "text": "2 अक्टूबर 1950" }
+    ],
+    "correct": "C",
+    "explanation": "26 जनवरी 1950 को भारत का संविधान पूर्ण रूप से प्रभाव में आया।"
+  },
+  {
+    "qCode": "QC-104",
+    "category": "Space & Science",
+    "question": "भारत द्वारा प्रक्षेपित पहले कृत्रिम उपग्रह का नाम क्या था?",
+    "options": [
+      { "letter": "A", "text": "आर्यभट्ट" },
+      { "letter": "B", "text": "भास्कर-1" },
+      { "letter": "C", "text": "रोहिणी" },
+      { "letter": "D", "text": "इनसैट-1A" }
+    ],
+    "correct": "A",
+    "explanation": "19 अप्रैल 1975 को भारत ने अपना पहला उपग्रह आर्यभट्ट अंतरिक्ष में भेजा था।"
+  }
+]
