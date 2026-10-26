@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWS 7AMPM - Live Quiz & Daily GK Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand-wrap">
+      <div class="brand-logo">7AMPM</div>
+      <div class="brand-text">
+        <h1>QUIZ CONTEST</h1>
+        <p>Live & Daily Knowledge Hub</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-indicator" id="liveStatusBadge">
+        <span class="pulse-dot"></span>
+        <span id="liveStatusText">CONNECTING...</span>
+      </div>
+      <button class="menu-toggle-btn" onclick="toggleDrawer()">☰</button>
+    </div>
+  </header>
+
+  <!-- Side Navigation Drawer -->
+  <aside class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <h3 style="color: var(--accent);">Menu</h3>
+      <button class="menu-toggle-btn" onclick="toggleDrawer()">✕</button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="index.html">🏠 होमपेज (Home)</a>
+      <a href="Quizpage.html">🎯 डेली क्विज़ कार्ड्स (Play Quiz)</a>
+      <a href="#contestSection">🔴 लाइव क्विज़ कॉन्टेस्ट (Contest Hub)</a>
+      <a href="#feedSection">📋 लाइव सबमिशन लिस्ट (Live Feed)</a>
+      <a href="admin.html">🔐 होस्ट / एडमिन पैनल (Admin)</a>
+    </nav>
+  </aside>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+
+    <!-- Hero Card -->
+    <section class="hero-card">
+      <h2>भारत का नंबर 1 <span>लाइव क्विज़ प्रतियोगिता</span> पोर्टल</h2>
+      <p>YouTube लाइव के दौरान पूछे गए सवालों के जवाब सीधे Google Form के ज़रिए सबमिट करें और लकी ड्रॉ में भाग लें।</p>
+      <div class="hero-actions">
+        <a href="#contestSection" class="btn btn-primary">🔴 Join Today's Live</a>
+        <a href="Quizpage.html" class="btn btn-accent">🎯 Practice Daily Quiz Cards</a>
+      </div>
+    </section>
+
+    <!-- Expandable Live Contest & Announcement Section -->
+    <section class="announcement-box" id="contestSection">
+      <div class="announcement-bar" onclick="toggleAnnouncement()">
+        <div class="announcement-title">
+          <span>📢</span>
+          <span id="announcementHeadline">आगामी लाइव क्विज़ प्रतियोगिता: नियम व फॉर्म लिंक</span>
+        </div>
+        <span id="expandIcon" style="font-size: 14px; color: var(--accent);">▼ विस्तार से देखें</span>
+      </div>
+      <div class="announcement-body" id="announcementBody">
+        <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 10px;" id="contestNoticeDetails">
+          🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाए गए <em>Question Code (जैसे QC-101)</em> को नीचे दिए गए फॉर्म में भरें और 60 सेकंड के भीतर सही विकल्प चुनकर सबमिट करें।
+        </p>
+        <div class="form-embed-wrapper">
+          <a href="https://forms.gle/" target="_blank" id="googleFormActionBtn" class="btn btn-accent" style="width: 100%; justify-content: center;">
+            📝 Google Form में उत्तर सबमिट करें (Open Form)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2x2 Feature Square Grid Boxes -->
+    <section class="feature-grid">
+      <a href="Quizpage.html" class="square-card">
+        <div class="square-icon">⏱️</div>
+        <h3>Play Web Quiz</h3>
+        <p>टाइमर और साउंड इफ़ेक्ट्स के साथ KBC स्टाइल सवालों की प्रैक्टिस करें।</p>
+      </a>
+
+      <a href="Quizpage.html?mode=simple" class="square-card">
+        <div class="square-icon">🗂️</div>
+        <h3>Flash Cards</h3>
+        <p>बिना टाइमर के तेज़ रिवीज़न और तुरंत सही जवाब की जांच करें।</p>
+      </a>
+
+      <a href="Quizpage.html" class="square-card">
+        <div class="square-icon">📰</div>
+        <h3>Current Affairs</h3>
+        <p>तारीख़ के अनुसार राष्ट्रीय और अंतर्राष्ट्रीय समसामयिक प्रश्नोत्तरी।</p>
+      </a>
+
+      <a href="#feedSection" class="square-card">
+        <div class="square-icon">🏆</div>
+        <h3>Live Leaderboard</h3>
+        <p>लाइव स्ट्रीम के प्रतिभागियों की सबमिशन स्थिति और विनर ड्रॉ देखें।</p>
+      </a>
+    </section>
+
+    <!-- Public Live Submissions Transparency Table -->
+    <section class="live-feed-section" id="feedSection">
+      <div class="feed-header">
+        <h3>📋 हालिया सबमिशन (Live Answers Feed)</h3>
+        <button class="btn btn-secondary mini-btn" onclick="fetchLiveSubmissions()" style="font-size: 11px; padding: 4px 8px;">🔄 Refresh</button>
+      </div>
+      <div class="table-responsive">
+        <table class="live-table">
+          <thead>
+            <tr>
+              <th>#Sr</th>
+              <th>Question Code</th>
+              <th>प्रतिभागी का नाम (Name)</th>
+              <th>चुना गया विकल्प</th>
+            </tr>
+          </thead>
+          <tbody id="liveSubmissionsBody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 16px;">
+                डेटा लोड हो रहा है या अभी कोई सबमिशन नहीं हुआ है...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>© 2026 NEWS 7AMPM Studio. All rights reserved.</p>
+    <p style="margin-top: 4px;">Designed for High-Speed Live YouTube Quizzes & Education.</p>
+  </footer>
+
+  <!-- Fixed Mobile Bottom Dock -->
+  <nav class="bottom-dock">
+    <a href="index.html" class="dock-item active">
+      <span class="dock-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="Quizpage.html" class="dock-item">
+      <span class="dock-icon">🎮</span>
+      <span>Play Quiz</span>
+    </a>
+    <a href="#contestSection" class="dock-item">
+      <span class="dock-icon">🔴</span>
+      <span>Contest</span>
+    </a>
+    <a href="#feedSection" class="dock-item">
+      <span class="dock-icon">📋</span>
+      <span>Feed</span>
+    </a>
+  </nav>
+
+  <script src="indexengine.js"></script>
+</body>
+</html>
