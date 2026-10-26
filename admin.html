@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWS 7AMPM - Live Contest Admin & Winner Picker</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media(max-width: 768px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+    .panel-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .winner-slot {
+      background: rgba(10, 14, 24, 0.8);
+      border: 2px dashed var(--accent);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+    .winner-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--accent);
+      margin: 6px 0;
+    }
+    .slot-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand-wrap">
+      <div class="brand-logo">ADMIN</div>
+      <div class="brand-text">
+        <h1>CONTEST CONTROLLER</h1>
+        <p>Winner Picker & Submissions</p>
+      </div>
+    </div>
+    <a href="index.html" class="btn btn-secondary mini-btn">← Website</a>
+  </header>
+
+  <main class="main-wrapper">
+
+    <!-- Admin Authentication State -->
+    <div id="authGate" class="panel-box" style="max-width: 400px; margin: 40px auto; text-align: center;">
+      <h3 style="color: var(--accent);">Admin Access</h3>
+      <input type="password" id="adminPassInput" placeholder="Enter Admin Secret PIN..." style="padding: 10px; background: #1a2030; border: 1px solid #334155; color: #fff; border-radius: 6px; text-align: center;">
+      <button class="btn btn-primary" onclick="verifyAdmin()">Login Dashboard</button>
+    </div>
+
+    <!-- Admin Operations Panel -->
+    <div id="adminDashboard" style="display: none;" class="admin-grid">
+
+      <!-- Left Column: Controls & Filters -->
+      <div class="panel-box">
+        <h3 style="color: var(--accent);">🎯 Contest Filter & Pick Winner</h3>
+        
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="filterQC" placeholder="Question Code (e.g. QC-101)" style="flex: 1; padding: 8px; background: #161c2c; border: 1px solid #334155; color: #fff; border-radius: 6px;">
+          <select id="filterCorrectOpt" style="padding: 8px; background: #161c2c; border: 1px solid #334155; color: #fff; border-radius: 6px;">
+            <option value="A">Opt A</option>
+            <option value="B">Opt B</option>
+            <option value="C">Opt C</option>
+            <option value="D" selected>Opt D</option>
+          </select>
+        </div>
+
+        <button class="btn btn-accent" onclick="filterEligibleParticipants()">🔍 1. Filter Correct Submissions</button>
+        <p style="font-size: 11px; color: var(--text-muted);" id="eligibleCountText">योग्य प्रतिभागी: 0</p>
+
+        <!-- Lucky Draw Random Picker Button -->
+        <div style="border-top: 1px solid var(--card-border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn btn-primary" onclick="pickRandomWinner(1)">🥇 Pick 1st Winner (Random)</button>
+          <button class="btn btn-secondary" onclick="pickRandomWinner(2)">🥈 Pick 2nd Winner (Random)</button>
+          <button class="btn btn-secondary" onclick="pickRandomWinner(3)">🥉 Pick 3rd Winner (Random)</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Live Winner Podium Display -->
+      <div class="panel-box">
+        <h3 style="color: var(--accent);">🏆 Live Winner Showcase</h3>
+        
+        <div class="winner-slot">
+          <div class="slot-title">🥇 FIRST WINNER</div>
+          <div class="winner-name" id="win1">- WAITING -</div>
+          <div style="font-size: 11px; color: var(--text-muted);" id="win1Details">Details will appear here</div>
+        </div>
+
+        <div class="winner-slot" style="border-color: #94a3b8;">
+          <div class="slot-title">🥈 SECOND WINNER</div>
+          <div class="winner-name" id="win2" style="color: #cbd5e1;">- WAITING -</div>
+          <div style="font-size: 11px; color: var(--text-muted);" id="win2Details">Details will appear here</div>
+        </div>
+
+        <div class="winner-slot" style="border-color: #cd7f32;">
+          <div class="slot-title">🥉 THIRD WINNER</div>
+          <div class="winner-name" id="win3" style="color: #cd7f32;">- WAITING -</div>
+          <div style="font-size: 11px; color: var(--text-muted);" id="win3Details">Details will appear here</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    const ADMIN_SECRET_PIN = "7ampm2026"; // Change to your preferred PIN
+    let allSubmissions = [];
+    let eligiblePool = [];
+
+    function verifyAdmin() {
+      const pin = document.getElementById('adminPassInput').value.trim();
+      if (pin === ADMIN_SECRET_PIN) {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'grid';
+        loadAdminData();
+      } else {
+        alert("गलत पासवर्ड!");
+      }
+    }
+
+    async function loadAdminData() {
+      // Connects with Apps Script (action=getAdminData)
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbx_PLACEHOLDER_KEY/exec?action=getAdminData&pin=" + ADMIN_SECRET_PIN);
+        const data = await res.json();
+        allSubmissions = data.records || [];
+      } catch (e) {
+        // Mock fallback data for instant demo
+        allSubmissions = [
+          { name: "Rahul Sharma", phone: "98765xxxxx", qCode: "QC-101", selectedOption: "D" },
+          { name: "Sunil Verma", phone: "91234xxxxx", qCode: "QC-101", selectedOption: "D" },
+          { name: "Pooja Singh", phone: "94567xxxxx", qCode: "QC-101", selectedOption: "B" },
+          { name: "Vikram Das", phone: "96789xxxxx", qCode: "QC-101", selectedOption: "D" }
+        ];
+      }
+    }
+
+    function filterEligibleParticipants() {
+      const qCode = document.getElementById('filterQC').value.trim().toUpperCase();
+      const correct = document.getElementById('filterCorrectOpt').value.trim().toUpperCase();
+
+      eligiblePool = allSubmissions.filter(item => {
+        const matchQC = qCode ? (item.qCode && item.qCode.toUpperCase() === qCode) : true;
+        const matchAns = item.selectedOption && item.selectedOption.toUpperCase() === correct;
+        return matchQC && matchAns;
+      });
+
+      document.getElementById('eligibleCountText').innerText = `योग्य प्रतिभागी (Correct Answers): ${eligiblePool.length}`;
+      if (eligiblePool.length === 0) {
+        alert("इस फ़िल्टर में कोई सही जवाब नहीं मिला!");
+      }
+    }
+
+    function pickRandomWinner(rank) {
+      if (eligiblePool.length === 0) {
+        alert("पहले 'Filter Correct Submissions' दबाकर लिस्ट लोड करें!");
+        return;
+      }
+
+      const randIdx = Math.floor(Math.random() * eligiblePool.length);
+      const winner = eligiblePool[randIdx];
+
+      // Remove winner so same person doesn't win 1st and 2nd
+      eligiblePool.splice(randIdx, 1);
+
+      document.getElementById(`win${rank}`).innerText = winner.name;
+      document.getElementById(`win${rank}Details`).innerText = `Phone: ${winner.phone || 'Verified'} | Code: ${winner.qCode}`;
+    }
+  </script>
+</body>
+</html>
