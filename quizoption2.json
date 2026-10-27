@@ -1,0 +1,54 @@
+[
+  {
+    "qCode": "742",
+    "category": "Indian History",
+    "question": "हड़प्पा सभ्यता (सिंधु घाटी सभ्यता) की खोज किस वर्ष हुई थी?",
+    "options": [
+      { "letter": "A", "text": "1921 में" },
+      { "letter": "B", "text": "1922 में" },
+      { "letter": "C", "text": "1935 में" },
+      { "letter": "D", "text": "1942 में" }
+    ],
+    "correct": "A",
+    "explanation": "हड़प्पा स्थल की खोज 1921 में दयाराम साहनी द्वारा की गई थी।"
+  },
+  {
+    "qCode": "518",
+    "category": "Geography",
+    "question": "कर्क रेखा (Tropic of Cancer) भारत के कुल कितने राज्यों से होकर गुजरती है?",
+    "options": [
+      { "letter": "A", "text": "6 राज्य" },
+      { "letter": "B", "text": "7 राज्य" },
+      { "letter": "C", "text": "8 राज्य" },
+      { "letter": "D", "text": "9 राज्य" }
+    ],
+    "correct": "C",
+    "explanation": "कर्क रेखा भारत के 8 राज्यों (गुजरात, राजस्थान, म.प्र., छत्तीसगढ़, झारखंड, प. बंगाल, त्रिपुरा, मिज़ोरम) से गुजरती है।"
+  },
+  {
+    "qCode": "369",
+    "category": "General Science",
+    "question": "मानव शरीर की सबसे बड़ी ग्रंथि (Largest Gland) कौन सी है?",
+    "options": [
+      { "letter": "A", "text": "अग्न्याशय (Pancreas)" },
+      { "letter": "B", "text": "यकृत (Liver)" },
+      { "letter": "C", "text": "थायरॉयड (Thyroid)" },
+      { "letter": "D", "text": "पीयूष ग्रंथि (Pituitary)" }
+    ],
+    "correct": "B",
+    "explanation": "यकृत (Liver) मानव शरीर की सबसे बड़ी ग्रंथि है जो पित्त रस (Bile) का निर्माण करती है।"
+  },
+  {
+    "qCode": "891",
+    "category": "Current Affairs",
+    "question": "भारत के मुख्य चुनाव आयुक्त (Chief Election Commissioner) की नियुक्ति कौन करता है?",
+    "options": [
+      { "letter": "A", "text": "प्रधानमंत्री" },
+      { "letter": "B", "text": "भारत के मुख्य न्यायाधीश" },
+      { "letter": "C", "text": "राष्ट्रपति" },
+      { "letter": "D", "text": "संसद" }
+    ],
+    "correct": "C",
+    "explanation": "संविधान के अनुच्छेद 324(2) के तहत मुख्य चुनाव आयुक्त की नियुक्ति भारत के राष्ट्रपति द्वारा की जाती है।"
+  }
+]
