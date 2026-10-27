@@ -3,187 +3,498 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEWS 7AMPM - Live Contest Admin & Winner Picker</title>
-  <link rel="stylesheet" href="style.css">
+  <title>QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता व डेली सामान्य ज्ञान हब</title>
+
+  <!-- ================= TECHNICAL SEO & META TAGS ================= -->
+  <meta name="title" content="QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता व डेली सामान्य ज्ञान हब">
+  <meta name="description" content="YouTube लाइव क्विज़ प्रतियोगिता में भाग लें, सही उत्तर सबमिट करें और लकी विनर बनें। प्रतिदिन नए GK प्रश्नोत्तरी, ट्रिक्स और करेंट अफेयर्स।">
+  <meta name="keywords" content="Live Quiz Contest, Daily GK Hindi, Current Affairs 2026, YouTube Quiz Live, GK Tricks, SSC GD GK, Railway NTPC Quiz">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#e50914">
+
+  <!-- Open Graph / WhatsApp / Facebook Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://quiz7ampm.com/">
+  <meta property="og:title" content="QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता व डेली GK">
+  <meta property="og:description" content="लाइव स्ट्रीम में सही विकल्प चुनें और लकी विनर बनें। अभी भाग लें!">
+  <meta property="og:image" content="https://quiz7ampm.com/assets/og-banner.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://quiz7ampm.com/">
+  <meta property="twitter:title" content="QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता">
+  <meta property="twitter:description" content="YouTube लाइव क्विज़ में हिस्सा लें और अपना सामान्य ज्ञान परखें।">
+  <meta property="twitter:image" content="https://quiz7ampm.com/assets/og-banner.jpg">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://quiz7ampm.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+
+  <!-- ================= STRUCTURED DATA (JSON-LD SCHEMA) ================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://quiz7ampm.com/#website",
+        "url": "https://quiz7ampm.com/",
+        "name": "QUIZ 7AMPM",
+        "description": "लाइव क्विज़ प्रतियोगिता और सामान्य ज्ञान पोर्टल",
+        "inLanguage": "hi"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://quiz7ampm.com/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "होमपेज",
+            "item": "https://quiz7ampm.com/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- ================= EMBEDDED CSS STYLES ================= -->
   <style>
-    .admin-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    :root {
+      --bg-dark: #090c12;
+      --card-bg: rgba(20, 25, 38, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #e50914;
+      --accent: #ffd700;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --dock-bg: rgba(14, 18, 27, 0.96);
     }
-    @media(max-width: 768px) {
-      .admin-grid { grid-template-columns: 1fr; }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 90px; }
+
+    /* Sticky Header */
+    .app-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(9, 12, 18, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 18px;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .panel-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .brand-wrap { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { background: linear-gradient(135deg, var(--primary), #ff5722); color: #fff; font-weight: 900; font-size: 13px; padding: 5px 9px; border-radius: 6px; letter-spacing: 1px; }
+    .brand-text h1 { font-size: 15px; font-weight: 800; color: var(--text-main); }
+    .brand-text p { font-size: 10px; color: var(--accent); }
+
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .live-indicator {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;
     }
-    .winner-slot {
-      background: rgba(10, 14, 24, 0.8);
-      border: 2px dashed var(--accent);
-      border-radius: 12px;
-      padding: 18px;
-      text-align: center;
+    .live-indicator.online { background: rgba(229, 9, 20, 0.15); border: 1px solid var(--primary); color: #ff4d4d; }
+    .live-indicator.offline { background: rgba(148, 163, 184, 0.1); border: 1px solid #475569; color: #94a3b8; }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .online .pulse-dot { background: var(--primary); animation: pulseAnim 1.2s infinite; }
+    .offline .pulse-dot { background: #64748b; }
+
+    @keyframes pulseAnim {
+      0%, 100% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
     }
-    .winner-name {
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--accent);
-      margin: 6px 0;
+
+    .menu-toggle-btn { background: transparent; border: 1px solid var(--card-border); color: #fff; font-size: 18px; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+
+    /* Side Drawer */
+    .side-drawer {
+      position: fixed; top: 0; right: -280px; width: 270px; height: 100vh;
+      background: #111522; border-left: 1px solid var(--card-border); z-index: 200;
+      transition: right 0.3s ease; padding: 20px; display: flex; flex-direction: column; gap: 15px;
     }
-    .slot-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: var(--text-muted);
+    .side-drawer.open { right: 0; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+    .drawer-nav a { display: block; color: var(--text-main); text-decoration: none; padding: 10px 0; font-size: 13px; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); }
+
+    /* Breadcrumbs */
+    .breadcrumb-nav { max-width: 960px; margin: 10px auto 0; padding: 0 16px; font-size: 11px; color: var(--text-muted); }
+    .breadcrumb-nav a { color: var(--accent); text-decoration: none; }
+
+    /* Main Container */
+    .main-wrapper { max-width: 960px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 18px; }
+
+    /* Hero */
+    .hero-card {
+      background: linear-gradient(135deg, rgba(20, 25, 42, 0.95), rgba(10, 13, 20, 0.98));
+      border: 1px solid var(--card-border); border-radius: 16px; padding: 20px 16px; text-align: center;
     }
+    .hero-card h2 { font-size: 19px; font-weight: 900; margin-bottom: 8px; }
+    .hero-card h2 span { color: var(--accent); }
+    .hero-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+    .hero-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 15px; border-radius: 8px; font-size: 12px; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-accent { background: var(--accent); color: #000; font-weight: 800; }
+    .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--card-border); }
+
+    /* Announcement Box & Contest */
+    .announcement-box {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: 4px solid var(--accent); border-radius: 12px; overflow: hidden;
+    }
+    .announcement-bar { padding: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .announcement-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--accent); }
+    .announcement-body { display: none; background: rgba(10, 14, 22, 0.7); padding: 14px; border-top: 1px solid var(--card-border); }
+    .announcement-body.active { display: block; }
+
+    .closed-msg {
+      display: none; padding: 16px; text-align: center;
+      background: rgba(229, 9, 20, 0.12); border: 1px dashed var(--primary);
+      border-radius: 8px; color: #ff9999; font-size: 13px; font-weight: 700;
+    }
+    .announcement-box.is-closed .closed-msg { display: block; }
+    .announcement-box.is-closed .live-only-content { display: none !important; }
+
+    /* Iframe Scroll Container */
+    .iframe-embed-box {
+      width: 100%; height: 520px; border-radius: 10px; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; background: #0e121b; border: 1px solid var(--card-border); margin-top: 10px;
+    }
+    .iframe-embed-box iframe { width: 100%; height: 100%; min-height: 520px; border: none; display: block; }
+
+    /* Knowledge Hub Widgets */
+    .widget-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; }
+    .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .widget-header h3 { font-size: 14px; color: var(--accent); font-weight: 800; }
+
+    /* Poll of the Day */
+    .poll-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .poll-btn {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+      color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px;
+      text-align: left; cursor: pointer; display: flex; justify-content: space-between;
+    }
+    .poll-btn:hover { border-color: var(--accent); }
+    .poll-percent { color: var(--accent); font-weight: bold; display: none; }
+
+    /* Feature Grid (4-Items) */
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 520px) { .feature-grid { grid-template-columns: 1fr; } }
+    .square-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 16px; text-decoration: none; color: inherit;
+    }
+    .square-icon { font-size: 22px; margin-bottom: 6px; }
+    .square-card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .square-card p { font-size: 11px; color: var(--text-muted); }
+
+    /* Floating WhatsApp Share */
+    .whatsapp-float-btn {
+      position: fixed; bottom: 82px; right: 16px; background: #25d366; color: #fff;
+      font-weight: 800; font-size: 12px; padding: 9px 14px; border-radius: 30px;
+      text-decoration: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      display: flex; align-items: center; gap: 6px; z-index: 99;
+    }
+
+    /* Bottom Dock */
+    .bottom-dock {
+      position: fixed; bottom: 0; left: 0; right: 0; background: var(--dock-bg);
+      backdrop-filter: blur(14px); border-top: 1px solid var(--card-border);
+      display: flex; justify-content: space-around; padding: 8px 6px; z-index: 100;
+    }
+    .dock-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 700; }
+    .dock-item.active, .dock-item:hover { color: var(--accent); }
+    .dock-icon { font-size: 17px; }
+
+    .app-footer { text-align: center; padding: 20px 14px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 20px; }
   </style>
 </head>
 <body>
 
+  <!-- ================= TOP HEADER ================= -->
   <header class="app-header">
     <div class="brand-wrap">
-      <div class="brand-logo">ADMIN</div>
+      <div class="brand-logo">7AMPM</div>
       <div class="brand-text">
-        <h1>CONTEST CONTROLLER</h1>
-        <p>Winner Picker & Submissions</p>
+        <h1>QUIZ CONTEST</h1>
+        <p>Live & Daily Knowledge Portal</p>
       </div>
     </div>
-    <a href="index.html" class="btn btn-secondary mini-btn">← Website</a>
+    <div class="header-right">
+      <div class="live-indicator" id="headerLiveBadge">
+        <span class="pulse-dot"></span>
+        <span id="headerLiveText">Checking...</span>
+      </div>
+      <button class="menu-toggle-btn" onclick="toggleDrawer()">☰</button>
+    </div>
   </header>
 
+  <!-- Side Navigation Drawer -->
+  <aside class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <h3 style="color: var(--accent);">Menu Navigation</h3>
+      <button class="menu-toggle-btn" onclick="toggleDrawer()">✕</button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="index.html">🏠 होमपेज (Home)</a>
+      <a href="quizpage.html">🎯 डेली क्विज़ कार्ड्स (Play Quiz)</a>
+      <a href="#contestSection">🔴 लाइव क्विज़ कॉन्टेस्ट (Contest Hub)</a>
+      <a href="#publicSheetSection">📋 लाइव सबमिशन शीट (Public Sheet)</a>
+      <a href="#pollSection">📊 आज का पोल (Poll of the Day)</a>
+    </nav>
+  </aside>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <span>🏠 <a href="index.html">होमपेज</a></span> / <span>लाइव कॉन्टेस्ट व अभ्यास</span>
+  </nav>
+
+  <!-- ================= MAIN WRAPPER ================= -->
   <main class="main-wrapper">
 
-    <!-- Admin Authentication State -->
-    <div id="authGate" class="panel-box" style="max-width: 400px; margin: 40px auto; text-align: center;">
-      <h3 style="color: var(--accent);">Admin Access</h3>
-      <input type="password" id="adminPassInput" placeholder="Enter Admin Secret PIN..." style="padding: 10px; background: #1a2030; border: 1px solid #334155; color: #fff; border-radius: 6px; text-align: center;">
-      <button class="btn btn-primary" onclick="verifyAdmin()">Login Dashboard</button>
-    </div>
+    <!-- 1. Hero Card -->
+    <section class="hero-card">
+      <h2>भारत का नंबर 1 <span>लाइव क्विज़ प्रतियोगिता</span> पोर्टल</h2>
+      <p>YouTube लाइव स्ट्रीम में दिख रहे Question Code को भरें और हर सवाल पर लकी विनर बनने का मौका पाएं!</p>
+      <div class="hero-actions">
+        <a href="#contestSection" class="btn btn-primary">🔴 Join Today's Live</a>
+        <a href="quizpage.html" class="btn btn-accent">🎯 Practice Daily Quiz Cards</a>
+      </div>
+    </section>
 
-    <!-- Admin Operations Panel -->
-    <div id="adminDashboard" style="display: none;" class="admin-grid">
-
-      <!-- Left Column: Controls & Filters -->
-      <div class="panel-box">
-        <h3 style="color: var(--accent);">🎯 Contest Filter & Pick Winner</h3>
-        
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="filterQC" placeholder="Question Code (e.g. QC-101)" style="flex: 1; padding: 8px; background: #161c2c; border: 1px solid #334155; color: #fff; border-radius: 6px;">
-          <select id="filterCorrectOpt" style="padding: 8px; background: #161c2c; border: 1px solid #334155; color: #fff; border-radius: 6px;">
-            <option value="A">Opt A</option>
-            <option value="B">Opt B</option>
-            <option value="C">Opt C</option>
-            <option value="D" selected>Opt D</option>
-          </select>
+    <!-- 2. Expandable Announcement & Google Form Hub (Master Managed) -->
+    <section class="announcement-box" id="contestSection">
+      <div class="announcement-bar" onclick="toggleAnnouncement()">
+        <div class="announcement-title">
+          <span>📢</span>
+          <span id="contestBoxTitle">लाइव क्विज़ प्रतियोगिता: उत्तर फ़ॉर्म</span>
         </div>
-
-        <button class="btn btn-accent" onclick="filterEligibleParticipants()">🔍 1. Filter Correct Submissions</button>
-        <p style="font-size: 11px; color: var(--text-muted);" id="eligibleCountText">योग्य प्रतिभागी: 0</p>
-
-        <!-- Lucky Draw Random Picker Button -->
-        <div style="border-top: 1px solid var(--card-border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <button class="btn btn-primary" onclick="pickRandomWinner(1)">🥇 Pick 1st Winner (Random)</button>
-          <button class="btn btn-secondary" onclick="pickRandomWinner(2)">🥈 Pick 2nd Winner (Random)</button>
-          <button class="btn btn-secondary" onclick="pickRandomWinner(3)">🥉 Pick 3rd Winner (Random)</button>
-        </div>
+        <span id="expandIcon" style="font-size: 13px; color: var(--accent);">▼ फ़ॉर्म खोलें</span>
       </div>
 
-      <!-- Right Column: Live Winner Podium Display -->
-      <div class="panel-box">
-        <h3 style="color: var(--accent);">🏆 Live Winner Showcase</h3>
+      <div class="announcement-body" id="announcementBody">
         
-        <div class="winner-slot">
-          <div class="slot-title">🥇 FIRST WINNER</div>
-          <div class="winner-name" id="win1">- WAITING -</div>
-          <div style="font-size: 11px; color: var(--text-muted);" id="win1Details">Details will appear here</div>
+        <!-- Closed Notice (is-closed होने पर यह दिखेगा) -->
+        <div class="closed-msg" id="closedMessageText">
+          🚫 आज का लाइव कॉन्टेस्ट समाप्त हो चुका है! अगला कॉन्टेस्ट जल्द घोषित किया जाएगा।
         </div>
 
-        <div class="winner-slot" style="border-color: #94a3b8;">
-          <div class="slot-title">🥈 SECOND WINNER</div>
-          <div class="winner-name" id="win2" style="color: #cbd5e1;">- WAITING -</div>
-          <div style="font-size: 11px; color: var(--text-muted);" id="win2Details">Details will appear here</div>
+        <!-- Live Content (is-closed होने पर अपने आप हाइड होगा) -->
+        <div class="live-only-content">
+          <p id="rulesTextElement" style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+            <!-- Rules dynamically populated from CONFIG -->
+          </p>
+
+          <div class="iframe-embed-box">
+            <iframe id="googleFormIframe" src="" title="Live Quiz Google Form">फ़ॉर्म लोड हो रहा है…</iframe>
+          </div>
+
+          <div style="margin-top: 12px; text-align: center;">
+            <a id="googleFormDirectBtn" href="" target="_blank" class="btn btn-secondary" style="font-size: 12px; width: 100%; justify-content: center;">
+              ↗️ Google Form को अलग विंडो में खोलें (Open in New Tab)
+            </a>
+          </div>
         </div>
 
-        <div class="winner-slot" style="border-color: #cd7f32;">
-          <div class="slot-title">🥉 THIRD WINNER</div>
-          <div class="winner-name" id="win3" style="color: #cd7f32;">- WAITING -</div>
-          <div style="font-size: 11px; color: var(--text-muted);" id="win3Details">Details will appear here</div>
-        </div>
       </div>
+    </section>
 
-    </div>
+    <!-- 3. GK Trick & Poll of the Day Section (Keeps users busy) -->
+    <section class="widget-box" id="pollSection">
+      <div class="widget-header">
+        <h3>📊 आज का पोल (Poll of the Day)</h3>
+        <span style="font-size: 11px; color: var(--text-muted);">लाइव वोटिंग</span>
+      </div>
+      <p style="font-size: 13px; font-weight: 700; margin-bottom: 6px;" id="pollQuestion">
+        Q. भारत में पहली बार राष्ट्रीय आपातकाल (National Emergency) किस वर्ष घोषित किया गया था?
+      </p>
+      <div class="poll-options" id="pollBox">
+        <button class="poll-btn" onclick="votePoll(this, 18)"><span>A) 1962</span> <span class="poll-percent">68%</span></button>
+        <button class="poll-btn" onclick="votePoll(this, 5)"><span>B) 1971</span> <span class="poll-percent">16%</span></button>
+        <button class="poll-btn" onclick="votePoll(this, 3)"><span>C) 1975</span> <span class="poll-percent">12%</span></button>
+        <button class="poll-btn" onclick="votePoll(this, 1)"><span>D) 1980</span> <span class="poll-percent">4%</span></button>
+      </div>
+    </section>
+
+    <!-- 4. Quick Knowledge Cards (Feature Grid) -->
+    <section class="feature-grid">
+      <a href="quizpage.html" class="square-card">
+        <div class="square-icon">🎯</div>
+        <h4>Play Web Quiz</h4>
+        <p>टाइमर और साउंड के साथ एग्जाम लेवल सवालों की प्रैक्टिस करें।</p>
+      </a>
+      <a href="quizpage.html" class="square-card">
+        <div class="square-icon">💡</div>
+        <h4>GK Short Tricks</h4>
+        <p>मुश्किल तारीखें और राज्य चुटकियों में याद करने की ट्रिक्स।</p>
+      </a>
+      <a href="quizpage.html" class="square-card">
+        <div class="square-icon">📰</div>
+        <h4>Current Affairs</h4>
+        <p>दैनिक महत्वपूर्ण समसामयिक घटनाओं की प्रश्नोत्तरी।</p>
+      </a>
+      <a href="#publicSheetSection" class="square-card">
+        <div class="square-icon">🏆</div>
+        <h4>Live Submissions</h4>
+        <p>पारदर्शी पब्लिक शीट में अपनी सबमिशन स्थिति जांचें।</p>
+      </a>
+    </section>
+
+    <!-- 5. Public Google Sheet Section (Live Transparency) -->
+    <section class="widget-box" id="publicSheetSection">
+      <div class="widget-header">
+        <h3>📋 लाइव सबमिशन स्थिति (Public Sheet)</h3>
+        <a id="publicSheetDirectBtn" href="" target="_blank" class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;">
+          ↗️ फुल शीट देखें
+        </a>
+      </div>
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+        🔒 सुरक्षा नोट: केवल समय, Question Code, नाम और उत्तर दिखेगा। WhatsApp नंबर पूरी तरह सुरक्षित है।
+      </p>
+      <div class="iframe-embed-box" style="height: 440px;">
+        <iframe id="publicSheetIframe" src="" title="Public Submissions Sheet">शीट लोड हो रही है…</iframe>
+      </div>
+    </section>
 
   </main>
 
+  <!-- ================= FLOATING WHATSAPP SHARE ================= -->
+  <a href="javascript:void(0)" onclick="shareOnWhatsApp()" class="whatsapp-float-btn" title="दोस्तों को शेयर करें">
+    <span>📲 शेयर करें</span>
+  </a>
+
+  <!-- ================= BOTTOM FLOATING DOCK ================= -->
+  <nav class="bottom-dock">
+    <a href="index.html" class="dock-item active">
+      <span class="dock-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="quizpage.html" class="dock-item">
+      <span class="dock-icon">🎯</span>
+      <span>Practice</span>
+    </a>
+    <a href="#contestSection" class="dock-item">
+      <span class="dock-icon">🔴</span>
+      <span>Contest</span>
+    </a>
+    <a href="#publicSheetSection" class="dock-item">
+      <span class="dock-icon">📋</span>
+      <span>Sheet</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>© 2026 QUIZ 7AMPM - लाइव प्रतियोगिता एवं ज्ञान पोर्टल।</p>
+  </footer>
+
+  <!-- ================= MASTER CONTROLLER JAVASCRIPT ================= -->
   <script>
-    const ADMIN_SECRET_PIN = "7ampm2026"; // Change to your preferred PIN
-    let allSubmissions = [];
-    let eligiblePool = [];
+    /* ================================================================
+       👉 1-POINT MASTER CONFIGURATION (यहीं से पूरा पेज कंट्रोल होगा)
+       ================================================================ */
+    const SITE_CONFIG = {
+      // 1. Contest State: true = चालू, false = बंद
+      isLive: true,
 
-    function verifyAdmin() {
-      const pin = document.getElementById('adminPassInput').value.trim();
-      if (pin === ADMIN_SECRET_PIN) {
-        document.getElementById('authGate').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'grid';
-        loadAdminData();
+      // 2. Closed Message
+      closedNotice: "🚫 आज का लाइव क्विज़ समाप्त हो चुका है! अगला कॉन्टेस्ट कल शाम 7:00 PM पर शुरू होगा।",
+
+      // 3. Contest Rules
+      showRules: true,
+      rulesText: "🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाया गया <em>Question Code (3-अंक)</em> लिखें और 60 सेकंड के भीतर सही विकल्प चुनकर सबमिट करें।",
+
+      // 4. Links
+      formUrl: "https://forms.gle/Zq6u4SUzHKr4xFUr6",
+      formEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_AAPKA_FORM_ID/viewform?embedded=true",
+      publicSheetUrl: "https://docs.google.com/spreadsheets/d/YOUR_PUBLIC_SHEET_ID/edit?usp=sharing",
+      publicSheetEmbedUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR_YOUR_ID/pubhtml?widget=true&headers=false",
+
+      // 5. WhatsApp Share
+      shareMessage: "🔥 *QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता*\nरोज़ाना लाइव क्विज़ में हिस्सा लें और लकी विनर बनें!\n👉 अभी जुड़ें: "
+    };
+
+    /* ================= APP CONTROLLER LOGIC ================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      applyMasterConfig();
+    });
+
+    function applyMasterConfig() {
+      const contestBox = document.getElementById('contestSection');
+      const badge = document.getElementById('headerLiveBadge');
+      const badgeText = document.getElementById('headerLiveText');
+      const formIframe = document.getElementById('googleFormIframe');
+      const formBtn = document.getElementById('googleFormDirectBtn');
+      const sheetIframe = document.getElementById('publicSheetIframe');
+      const sheetBtn = document.getElementById('publicSheetDirectBtn');
+      const rulesEl = document.getElementById('rulesTextElement');
+      const closedNoticeEl = document.getElementById('closedMessageText');
+
+      // 1. Live status toggle
+      if (SITE_CONFIG.isLive) {
+        contestBox.classList.remove('is-closed');
+        badge.className = "live-indicator online";
+        badgeText.innerText = "🔴 CONTEST LIVE";
       } else {
-        alert("गलत पासवर्ड!");
+        contestBox.classList.add('is-closed');
+        badge.className = "live-indicator offline";
+        badgeText.innerText = "⚪ OFFLINE";
       }
+
+      // 2. Rules & Notice
+      closedNoticeEl.innerHTML = SITE_CONFIG.closedNotice;
+      if (SITE_CONFIG.showRules) {
+        rulesEl.innerHTML = SITE_CONFIG.rulesText;
+        rulesEl.style.display = "block";
+      } else {
+        rulesEl.style.display = "none";
+      }
+
+      // 3. Assign URLs
+      formIframe.src = SITE_CONFIG.formEmbedUrl;
+      formBtn.href = SITE_CONFIG.formUrl;
+      sheetIframe.src = SITE_CONFIG.publicSheetEmbedUrl;
+      sheetBtn.href = SITE_CONFIG.publicSheetUrl;
     }
 
-    async function loadAdminData() {
-      // Connects with Apps Script (action=getAdminData)
-      try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbx_PLACEHOLDER_KEY/exec?action=getAdminData&pin=" + ADMIN_SECRET_PIN);
-        const data = await res.json();
-        allSubmissions = data.records || [];
-      } catch (e) {
-        // Mock fallback data for instant demo
-        allSubmissions = [
-          { name: "Rahul Sharma", phone: "98765xxxxx", qCode: "QC-101", selectedOption: "D" },
-          { name: "Sunil Verma", phone: "91234xxxxx", qCode: "QC-101", selectedOption: "D" },
-          { name: "Pooja Singh", phone: "94567xxxxx", qCode: "QC-101", selectedOption: "B" },
-          { name: "Vikram Das", phone: "96789xxxxx", qCode: "QC-101", selectedOption: "D" }
-        ];
-      }
+    // Toggle Drawer
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('open');
     }
 
-    function filterEligibleParticipants() {
-      const qCode = document.getElementById('filterQC').value.trim().toUpperCase();
-      const correct = document.getElementById('filterCorrectOpt').value.trim().toUpperCase();
-
-      eligiblePool = allSubmissions.filter(item => {
-        const matchQC = qCode ? (item.qCode && item.qCode.toUpperCase() === qCode) : true;
-        const matchAns = item.selectedOption && item.selectedOption.toUpperCase() === correct;
-        return matchQC && matchAns;
-      });
-
-      document.getElementById('eligibleCountText').innerText = `योग्य प्रतिभागी (Correct Answers): ${eligiblePool.length}`;
-      if (eligiblePool.length === 0) {
-        alert("इस फ़िल्टर में कोई सही जवाब नहीं मिला!");
-      }
+    // Toggle Form Accordion
+    function toggleAnnouncement() {
+      const body = document.getElementById('announcementBody');
+      const icon = document.getElementById('expandIcon');
+      body.classList.toggle('active');
+      icon.innerText = body.classList.contains('active') ? "▲ फ़ॉर्म समेटें" : "▼ फ़ॉर्म खोलें";
     }
 
-    function pickRandomWinner(rank) {
-      if (eligiblePool.length === 0) {
-        alert("पहले 'Filter Correct Submissions' दबाकर लिस्ट लोड करें!");
-        return;
-      }
+    // WhatsApp Share
+    function shareOnWhatsApp() {
+      const text = encodeURIComponent(SITE_CONFIG.shareMessage + window.location.href);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
 
-      const randIdx = Math.floor(Math.random() * eligiblePool.length);
-      const winner = eligiblePool[randIdx];
-
-      // Remove winner so same person doesn't win 1st and 2nd
-      eligiblePool.splice(randIdx, 1);
-
-      document.getElementById(`win${rank}`).innerText = winner.name;
-      document.getElementById(`win${rank}Details`).innerText = `Phone: ${winner.phone || 'Verified'} | Code: ${winner.qCode}`;
+    // Simple Interactive Poll
+    function votePoll(btn, val) {
+      const parent = btn.parentElement;
+      const allPercents = parent.querySelectorAll('.poll-percent');
+      allPercents.forEach(p => p.style.display = "inline");
+      btn.style.borderColor = "var(--accent)";
+      btn.style.background = "rgba(255, 215, 0, 0.15)";
+      const buttons = parent.querySelectorAll('.poll-btn');
+      buttons.forEach(b => b.onclick = null); // lock voting
     }
   </script>
 </body>
