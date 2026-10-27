@@ -217,6 +217,68 @@
     .dock-icon { font-size: 17px; }
 
     .app-footer { text-align: center; padding: 20px 14px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 20px; }
+    /* Headlines */
+.headline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  color: #e2e8f0;
+  font-size: 13px;
+  gap: 10px;
+}
+.headline-item:hover { color: var(--accent); }
+.hl-badge {
+  font-size: 10px;
+  background: rgba(229, 9, 20, 0.15);
+  color: #ff6b6b;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* History Box */
+.history-entry {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.history-entry strong { color: var(--accent); font-size: 13px; }
+
+/* Real & Demo Poll Styling */
+.poll-choice {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #fff;
+}
+.poll-fill-bar {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(229, 9, 20, 0.3), rgba(255, 215, 0, 0.3));
+  width: 0%;
+  transition: width 0.7s ease;
+  z-index: 1;
+}
+.poll-text { position: relative; z-index: 2; font-weight: 600; }
+.poll-stat { position: relative; z-index: 2; font-weight: 800; color: var(--accent); font-size: 12px; display: none; }
+.poll-locked .poll-stat { display: inline-block; }
+.poll-locked .poll-choice { cursor: default; }
+
   </style>
 </head>
 <body>
@@ -365,6 +427,63 @@
         <iframe id="publicSheetIframe" src="" title="Public Submissions Sheet">शीट लोड हो रही है…</iframe>
       </div>
     </section>
+<!-- 1. Top Clickable Headlines Ticker -->
+<section class="widget-box" id="headlinesSection" style="border-left: 4px solid var(--primary);">
+  <div class="widget-header">
+    <h3 style="color: #ff4d4d; display: flex; align-items: center; gap: 6px;">
+      <span>🔥</span> आज की बड़ी सुर्खियां (Top Headlines)
+    </h3>
+    <span style="font-size: 10px; color: var(--accent); background: rgba(255,215,0,0.1); padding: 3px 8px; border-radius: 10px;">Click to Read</span>
+  </div>
+  <div class="headlines-list" id="headlinesContainer">
+    <div style="font-size:12px; color:var(--text-muted); padding:10px 0;">लोड हो रहा है...</div>
+  </div>
+</section>
+
+<!-- 2. Dual-Mode Poll Engine (Demo + Apps Script Live) -->
+<section class="widget-box" id="pollSection">
+  <div class="widget-header">
+    <h3>📊 आज का पोल (Poll of the Day)</h3>
+    <span id="pollModeStatusBadge" style="font-size: 10px; color: var(--text-muted);">वोट करें</span>
+  </div>
+  <p style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #fff;" id="pollQuestionText">
+    प्रश्न लोड हो रहा है...
+  </p>
+  <div class="poll-container" id="pollItemsContainer"></div>
+</section>
+
+<!-- 3. Today's History Section -->
+<section class="widget-box" id="historySection" style="border-left: 4px solid var(--accent);">
+  <div class="widget-header">
+    <h3>📜 आज का इतिहास (On This Day in History)</h3>
+    <span id="todayDateLabel" style="font-size: 11px; color: var(--text-muted);"></span>
+  </div>
+  <div class="history-content" id="historyItemsContainer"></div>
+</section>
+
+<!-- 4. Portal Navigation Feature Grid -->
+<section class="feature-grid">
+  <a href="quizpage.html" class="square-card">
+    <div class="square-icon">🎯</div>
+    <h4>Play Web Quiz</h4>
+    <p>टाइम बाउंड KBC स्टाइल MCQ प्रैक्टिस और टेस्ट कार्ड्स।</p>
+  </a>
+  <a href="portal.html?tab=tricks" class="square-card">
+    <div class="square-icon">💡</div>
+    <h4>GK Short Tricks</h4>
+    <p>कठिन तारीखें और राजव्यवस्था ट्रिक्स से याद करें।</p>
+  </a>
+  <a href="portal.html?tab=ca" class="square-card">
+    <div class="square-icon">📰</div>
+    <h4>Current Affairs Hub</h4>
+    <p>साप्ताहिक व मासिक परीक्षा उपयोगी करेंट अफेयर्स।</p>
+  </a>
+  <a href="portal.html?tab=history" class="square-card">
+    <div class="square-icon">📜</div>
+    <h4>Historical Archives</h4>
+    <p>भारत और विश्व इतिहास की महत्वपूर्ण घटनाएं।</p>
+  </a>
+</section>
 
   </main>
 
@@ -496,6 +615,144 @@
       const buttons = parent.querySelectorAll('.poll-btn');
       buttons.forEach(b => b.onclick = null); // lock voting
     }
+    /* ================================================================
+   POLL ENGINE CONFIGURATION
+   ================================================================ */
+const POLL_ENGINE_CONFIG = {
+  // 🔴 जब Apps Script तैयार हो जाए, तो खाली "" की जगह अपना Web App URL डालें:
+  // उदा: "https://script.google.com/macros/s/AKfycbx.../exec"
+  appsScriptUrl: ""
+};
+
+let GLOBAL_DATA = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Show Current Date in Hindi
+  const d = new Date();
+  document.getElementById('todayDateLabel').innerText = d.toLocaleDateString('hi-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Fetch Centralized JSON Data
+  fetch('7ampmdata.json')
+    .then(r => r.json())
+    .then(data => {
+      GLOBAL_DATA = data;
+      renderHeadlines(data.headlines);
+      renderHistory(data.todayHistory);
+      initPollEngine(data.poll);
+    })
+    .catch(err => {
+      console.error("JSON fetch error:", err);
+    });
+});
+
+// 1. Render Headlines
+function renderHeadlines(list) {
+  const box = document.getElementById('headlinesContainer');
+  box.innerHTML = list.map(item => `
+    <a href="${item.targetUrl}" class="headline-item">
+      <span><span class="hl-badge">${item.badge}</span> ${item.title}</span>
+      <span style="color:var(--text-muted); font-size:11px;">→</span>
+    </a>
+  `).join('');
+}
+
+// 2. Render History
+function renderHistory(list) {
+  const box = document.getElementById('historyItemsContainer');
+  box.innerHTML = list.map(h => `
+    <div class="history-entry">
+      <div><strong>वर्ष ${h.year} - ${h.title}</strong></div>
+      <div style="color:#cbd5e1; margin-top:3px;">${h.desc}</div>
+    </div>
+  `).join('');
+}
+
+// 3. Dual-Mode Poll Engine
+function initPollEngine(pollData) {
+  const isLiveScript = POLL_ENGINE_CONFIG.appsScriptUrl.trim() !== "";
+  const badge = document.getElementById('pollModeStatusBadge');
+  document.getElementById('pollQuestionText').innerText = pollData.question;
+
+  if (isLiveScript) {
+    badge.innerText = "🌐 लाइव वोटिंग";
+    fetchLivePollResults(pollData);
+  } else {
+    badge.innerText = "⚡ डेमो मोड (स्थानीय)";
+    renderPollUI(pollData, null, false);
+  }
+}
+
+function renderPollUI(pollData, liveVotesMap, isLive) {
+  const container = document.getElementById('pollItemsContainer');
+  const userVote = localStorage.getItem(pollData.id);
+  const isVoted = userVote !== null;
+
+  if (isVoted) {
+    container.classList.add('poll-locked');
+    document.getElementById('pollModeStatusBadge').innerText = "✅ आपने वोट दे दिया";
+    document.getElementById('pollModeStatusBadge').style.color = "var(--success)";
+  }
+
+  // Calculate vote totals
+  let totalVotes = 0;
+  pollData.options.forEach((opt, idx) => {
+    let count = 0;
+    if (isLive && liveVotesMap) {
+      count = liveVotesMap[opt.id] || 0;
+    } else {
+      count = opt.demoVotes + (userVote == idx ? 1 : 0);
+    }
+    opt._currentCount = count;
+    totalVotes += count;
+  });
+
+  container.innerHTML = pollData.options.map((opt, idx) => {
+    const pct = totalVotes > 0 ? Math.round((opt._currentCount / totalVotes) * 100) : 0;
+    return `
+      <div class="poll-choice" onclick="handlePollClick(${idx}, '${opt.id}')">
+        <div class="poll-fill-bar" style="width: ${isVoted ? pct : 0}%"></div>
+        <span class="poll-text">${opt.text}</span>
+        <span class="poll-stat">${pct}% (${opt._currentCount})</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function handlePollClick(index, optionId) {
+  const poll = GLOBAL_DATA.poll;
+  if (localStorage.getItem(poll.id)) return; // Already voted
+
+  localStorage.setItem(poll.id, index);
+
+  const isLiveScript = POLL_ENGINE_CONFIG.appsScriptUrl.trim() !== "";
+  if (isLiveScript) {
+    // Submit vote to Apps Script endpoint
+    fetch(POLL_ENGINE_CONFIG.appsScriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pollId: poll.id, optionId: optionId })
+    }).then(() => {
+      fetchLivePollResults(poll);
+    });
+  } else {
+    // Local demo re-render
+    renderPollUI(poll, null, false);
+  }
+}
+
+function fetchLivePollResults(pollData) {
+  fetch(`${POLL_ENGINE_CONFIG.appsScriptUrl}?pollId=${pollData.id}`)
+    .then(r => r.json())
+    .then(liveVotes => {
+      renderPollUI(pollData, liveVotes, true);
+    })
+    .catch(() => {
+      // Fallback to demo mode if network fails
+      renderPollUI(pollData, null, false);
+    });
+}
+
   </script>
 </body>
 </html>
