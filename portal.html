@@ -3,25 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>7AMPM ज्ञान पोर्टल - Current Affairs & GK Tricks</title>
+  <title>7AMPM ज्ञान पोर्टल - Current Affairs, दिवस व इतिहास</title>
 
-  <!-- Technical SEO & Structured Breadcrumbs -->
-  <meta name="title" content="7AMPM ज्ञान पोर्टल - करेंट अफेयर्स व GK ट्रिक्स">
-  <meta name="description" content="प्रतियोगी परीक्षाओं के लिए विशेष करेंट अफेयर्स, GK ट्रिक्स और ऐतिहासिक घटनाक्रम।">
+  <meta name="title" content="7AMPM ज्ञान पोर्टल - Current Affairs, दिवस व इतिहास">
+  <meta name="description" content="तारीख के अनुसार करेंट अफेयर्स, महत्वपूर्ण दिवस, ऐतिहासिक घटनाएं और GK शार्ट ट्रिक्स।">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#e50914">
   <link rel="canonical" href="https://quiz7ampm.com/portal.html">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "होमपेज", "item": "https://quiz7ampm.com/" },
-      { "@type": "ListItem", "position": 2, "name": "ज्ञान पोर्टल", "item": "https://quiz7ampm.com/portal.html" }
-    ]
-  }
-  </script>
 
   <style>
     :root {
@@ -32,125 +20,295 @@
       --accent: #ffd700;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --success: #10b981;
     }
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', system-ui, sans-serif; }
     body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 70px; }
 
+    /* Sticky Portal Bar */
     .portal-header {
       background: rgba(9, 12, 18, 0.98); border-bottom: 1px solid var(--card-border);
       padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
     }
     .back-btn { color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 700; }
 
-    .main-container { max-width: 860px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+    .main-container { max-width: 900px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Category Nav Tabs */
-    .tab-nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    /* Horizontal Category Tabs */
+    .tab-nav {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
     .tab-btn {
       background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
       color: #cbd5e1; padding: 7px 16px; border-radius: 20px; font-size: 12px;
-      font-weight: 700; white-space: nowrap; cursor: pointer;
+      font-weight: 700; white-space: nowrap; cursor: pointer; transition: 0.2s;
     }
     .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-    /* Portal Content Cards */
-    .portal-card {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px;
+    /* Date Filter Pills (Auto generated) */
+    .date-filter-bar {
+      display: flex; gap: 8px; overflow-x: auto; padding: 6px 0;
+      scrollbar-width: none;
     }
-    .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+    .date-pill {
+      background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.25);
+      color: var(--accent); font-size: 11px; font-weight: 700; padding: 4px 10px;
+      border-radius: 6px; cursor: pointer; white-space: nowrap;
+    }
+    .date-pill.active { background: var(--accent); color: #000; }
+
+    /* Current Affairs Responsive Grid */
+    .ca-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 14px;
+    }
+    .ca-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .ca-img {
+      width: 100%; height: 140px; object-fit: cover; background: #161c28; display: block;
+    }
+    .ca-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .ca-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
     .badge { background: rgba(229, 9, 20, 0.15); color: #ff6b6b; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
-    .trick-box { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent); padding: 10px; border-radius: 6px; font-weight: bold; color: var(--accent); font-size: 13px; }
+
+    /* Headlines List */
+    .news-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .news-source-link {
+      align-self: flex-start; display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; color: var(--accent); text-decoration: none;
+      background: rgba(255, 215, 0, 0.1); padding: 4px 10px; border-radius: 6px;
+    }
+
+    /* History & Diwas Card */
+    .history-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .diwas-box {
+      background: rgba(16, 185, 129, 0.12); border-left: 3px solid var(--success);
+      padding: 10px 12px; border-radius: 6px; font-size: 13px; color: #a7f3d0;
+    }
+    .events-timeline { display: flex; flex-direction: column; gap: 8px; }
+    .event-item {
+      font-size: 12px; color: #cbd5e1; line-height: 1.5; padding-left: 10px;
+      border-left: 2px solid var(--card-border);
+    }
+    .event-item strong { color: var(--accent); }
+
+    /* Tricks Card */
+    .trick-box {
+      background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent);
+      padding: 10px; border-radius: 6px; font-weight: bold; color: var(--accent); font-size: 13px;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Top Bar -->
   <header class="portal-header">
-    <div style="font-weight: 800; font-size: 15px; color: #fff;">7AMPM <span style="color:var(--accent);">PORTAL</span></div>
+    <div style="font-weight: 800; font-size: 15px; color: #fff;">
+      7AMPM <span style="color:var(--accent);">ज्ञान पोर्टल</span>
+    </div>
     <a href="index.html" class="back-btn">← होमपेज पर लौटें</a>
   </header>
 
   <main class="main-container">
-    <!-- Tab Controls -->
+
+    <!-- Category Tabs -->
     <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchPortalTab('ca', this)">📰 करेंट अफेयर्स</button>
-      <button class="tab-btn" onclick="switchPortalTab('tricks', this)">💡 GK शार्ट ट्रिक्स</button>
-      <button class="tab-btn" onclick="switchPortalTab('history', this)">📜 ऐतिहासिक घटनाएं</button>
+      <button class="tab-btn active" onclick="switchTab('ca', this)">📰 करेंट अफेयर्स</button>
+      <button class="tab-btn" onclick="switchTab('headlines', this)">🔥 दैनिक सुर्खियां (News)</button>
+      <button class="tab-btn" onclick="switchTab('history_days', this)">📜 इतिहास व महत्वपूर्ण दिवस</button>
+      <button class="tab-btn" onclick="switchTab('tricks', this)">💡 GK शार्ट ट्रिक्स</button>
     </div>
 
+    <!-- Date Filter Pills -->
+    <div class="date-filter-bar" id="dateFilterBar" style="display: none;"></div>
+
     <!-- Container for dynamic entries -->
-    <div id="portalContentBox" style="display:flex; flex-direction:column; gap:12px;">
+    <div id="portalContentBox">
       <p style="text-align:center; color:var(--text-muted); padding:30px;">डेटा लोड हो रहा है...</p>
     </div>
+
   </main>
 
   <script>
-    let DATA_SOURCE = null;
+    let DATA_STORE = null;
+    let CURRENT_TAB = 'ca';
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Check URL parameters for tab navigation (e.g., portal.html?tab=tricks)
       const urlParams = new URLSearchParams(window.location.search);
-      const activeTab = urlParams.get('tab') || 'ca';
+      const requestedTab = urlParams.get('tab') || 'ca';
 
       fetch('7ampmdata.json')
-        .then(r => r.json())
+        .then(res => res.json())
         .then(data => {
-          DATA_SOURCE = data;
-          highlightInitialTab(activeTab);
-          renderTabContent(activeTab);
+          DATA_STORE = data;
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            if (btn.getAttribute('onclick').includes(`'${requestedTab}'`)) {
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
+          });
+          switchTab(requestedTab);
+        })
+        .catch(err => {
+          document.getElementById('portalContentBox').innerHTML = `
+            <div style="text-align:center; color:#ff8080; padding:20px;">
+              ⚠️ डेटा फ़ाइल (7ampmdata.json) लोड नहीं हो सकी।
+            </div>`;
         });
     });
 
-    function highlightInitialTab(tabKey) {
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        if (btn.getAttribute('onclick').includes(`'${tabKey}'`)) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-    }
+    function switchTab(tabKey, btnElement) {
+      CURRENT_TAB = tabKey;
+      if (btnElement) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
 
-    function switchPortalTab(tabKey, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderTabContent(tabKey);
-    }
-
-    function renderTabContent(tabKey) {
-      const box = document.getElementById('portalContentBox');
-      box.innerHTML = "";
+      const dateBar = document.getElementById('dateFilterBar');
+      dateBar.style.display = "none";
+      dateBar.innerHTML = "";
 
       if (tabKey === 'ca') {
-        box.innerHTML = DATA_SOURCE.currentAffairs.map(item => `
-          <article class="portal-card" id="${item.id}">
-            <div class="card-meta">
-              <span class="badge">${item.category}</span>
-              <span>${item.period}</span>
-            </div>
-            <h3 style="font-size:15px; color:#fff;">${item.title}</h3>
-            <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">${item.snippet}</p>
-          </article>
-        `).join('');
+        renderCurrentAffairs('ALL');
+      } else if (tabKey === 'headlines') {
+        renderHeadlines();
+      } else if (tabKey === 'history_days') {
+        renderHistoryAndDays();
       } else if (tabKey === 'tricks') {
-        box.innerHTML = DATA_SOURCE.gkTricks.map(item => `
-          <article class="portal-card" id="${item.id}">
-            <div class="card-meta"><span class="badge">GK Short Trick</span></div>
-            <h3 style="font-size:14px; color:#fff;">${item.topic}</h3>
-            <div class="trick-box">🎯 ट्रिक: "${item.trick}"</div>
-            <p style="font-size:12px; color:#cbd5e1; line-height:1.5; margin-top:4px;">${item.explanation}</p>
-          </article>
-        `).join('');
-      } else if (tabKey === 'history') {
-        box.innerHTML = DATA_SOURCE.todayHistory.map(item => `
-          <article class="portal-card">
-            <div class="card-meta"><span class="badge" style="background:rgba(255,215,0,0.15); color:var(--accent);">इतिहास पन्ना</span></div>
-            <h3 style="font-size:14px; color:#fff;">वर्ष ${item.year}: ${item.title}</h3>
-            <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">${item.desc}</p>
-          </article>
-        `).join('');
+        renderTricks();
       }
+    }
+
+    // 1. Current Affairs Renderer (With Safe Image & Date Filter)
+    function renderCurrentAffairs(filterDate) {
+      const list = DATA_STORE.currentAffairs || [];
+      const dateBar = document.getElementById('dateFilterBar');
+      dateBar.style.display = "flex";
+
+      // Collect unique dates
+      const uniqueDates = ['ALL', ...new Set(list.map(i => i.displayDate))];
+      dateBar.innerHTML = uniqueDates.map(d => `
+        <span class="date-pill ${d === filterDate ? 'active' : ''}" onclick="renderCurrentAffairs('${d}')">
+          ${d === 'ALL' ? '📅 सभी तारीखें' : d}
+        </span>
+      `).join('');
+
+      const filtered = filterDate === 'ALL' ? list : list.filter(i => i.displayDate === filterDate);
+      const box = document.getElementById('portalContentBox');
+
+      box.innerHTML = `
+        <div class="ca-grid">
+          ${filtered.map(item => `
+            <div class="ca-card">
+              ${item.imageUrl && item.imageUrl.trim() !== '' ? `
+                <img src="${item.imageUrl}" class="ca-img" alt="${item.title}" onerror="this.style.display='none';">
+              ` : ''}
+              <div class="ca-body">
+                <div class="ca-meta">
+                  <span class="badge">${item.category}</span>
+                  <span>${item.displayDate}</span>
+                </div>
+                <h4 style="font-size:14px; color:#fff; line-height:1.4;">${item.title}</h4>
+                <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">${item.snippet}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 2. Headlines with External Source URL
+    function renderHeadlines() {
+      const list = DATA_STORE.headlines || [];
+      const box = document.getElementById('portalContentBox');
+
+      box.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${list.map(item => `
+            <div class="news-card">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+                <span class="badge">${item.badge}</span>
+                <span>📅 ${item.displayDate}</span>
+              </div>
+              <h3 style="font-size:14px; color:#fff; line-height:1.4;">${item.title}</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                <span style="font-size:11px; color:#94a3b8;">स्रोत: <strong>${item.sourceName || 'News Media'}</strong></span>
+                <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="news-source-link">
+                  मूल खबर पढ़ें (Source) ↗
+                </a>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 3. History and Important Diwas
+    function renderHistoryAndDays() {
+      const list = DATA_STORE.historyAndDays || [];
+      const box = document.getElementById('portalContentBox');
+
+      box.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          ${list.map(entry => `
+            <div class="history-card">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:15px; color:var(--accent);">📅 ${entry.displayDate}</h3>
+              </div>
+
+              ${entry.importantDays && entry.importantDays.length > 0 ? `
+                <div class="diwas-box">
+                  <strong>🌟 आज का महत्वपूर्ण दिवस:</strong>
+                  <ul style="margin:4px 0 0 16px;">
+                    ${entry.importantDays.map(d => `<li>${d}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+
+              <div class="events-timeline">
+                <span style="font-size:12px; font-weight:700; color:#fff;">📜 प्रमुख ऐतिहासिक घटनाएं:</span>
+                ${entry.historyEvents.map(ev => `
+                  <div class="event-item">
+                    <strong>वर्ष ${ev.year}:</strong> ${ev.event}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 4. GK Tricks
+    function renderTricks() {
+      const list = DATA_STORE.gkTricks || [];
+      const box = document.getElementById('portalContentBox');
+
+      box.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${list.map(trk => `
+            <div class="history-card">
+              <span class="badge" style="align-self:flex-start;">GK Short Trick</span>
+              <h4 style="font-size:14px; color:#fff;">${trk.topic}</h4>
+              <div class="trick-box">🎯 ट्रिक सूत्र: "${trk.trick}"</div>
+              <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">💡 <strong>विस्तार:</strong> ${trk.explanation}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
   </script>
 </body>
