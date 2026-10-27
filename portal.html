@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7AMPM ज्ञान पोर्टल - Current Affairs & GK Tricks</title>
+
+  <!-- Technical SEO & Structured Breadcrumbs -->
+  <meta name="title" content="7AMPM ज्ञान पोर्टल - करेंट अफेयर्स व GK ट्रिक्स">
+  <meta name="description" content="प्रतियोगी परीक्षाओं के लिए विशेष करेंट अफेयर्स, GK ट्रिक्स और ऐतिहासिक घटनाक्रम।">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#e50914">
+  <link rel="canonical" href="https://quiz7ampm.com/portal.html">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "होमपेज", "item": "https://quiz7ampm.com/" },
+      { "@type": "ListItem", "position": 2, "name": "ज्ञान पोर्टल", "item": "https://quiz7ampm.com/portal.html" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-dark: #090c12;
+      --card-bg: rgba(20, 25, 38, 0.95);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #e50914;
+      --accent: #ffd700;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+    body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 70px; }
+
+    .portal-header {
+      background: rgba(9, 12, 18, 0.98); border-bottom: 1px solid var(--card-border);
+      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn { color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 700; }
+
+    .main-container { max-width: 860px; margin: 0 auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* Category Nav Tabs */
+    .tab-nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .tab-btn {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+      color: #cbd5e1; padding: 7px 16px; border-radius: 20px; font-size: 12px;
+      font-weight: 700; white-space: nowrap; cursor: pointer;
+    }
+    .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    /* Portal Content Cards */
+    .portal-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+    .badge { background: rgba(229, 9, 20, 0.15); color: #ff6b6b; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+    .trick-box { background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--accent); padding: 10px; border-radius: 6px; font-weight: bold; color: var(--accent); font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <header class="portal-header">
+    <div style="font-weight: 800; font-size: 15px; color: #fff;">7AMPM <span style="color:var(--accent);">PORTAL</span></div>
+    <a href="index.html" class="back-btn">← होमपेज पर लौटें</a>
+  </header>
+
+  <main class="main-container">
+    <!-- Tab Controls -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchPortalTab('ca', this)">📰 करेंट अफेयर्स</button>
+      <button class="tab-btn" onclick="switchPortalTab('tricks', this)">💡 GK शार्ट ट्रिक्स</button>
+      <button class="tab-btn" onclick="switchPortalTab('history', this)">📜 ऐतिहासिक घटनाएं</button>
+    </div>
+
+    <!-- Container for dynamic entries -->
+    <div id="portalContentBox" style="display:flex; flex-direction:column; gap:12px;">
+      <p style="text-align:center; color:var(--text-muted); padding:30px;">डेटा लोड हो रहा है...</p>
+    </div>
+  </main>
+
+  <script>
+    let DATA_SOURCE = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check URL parameters for tab navigation (e.g., portal.html?tab=tricks)
+      const urlParams = new URLSearchParams(window.location.search);
+      const activeTab = urlParams.get('tab') || 'ca';
+
+      fetch('7ampmdata.json')
+        .then(r => r.json())
+        .then(data => {
+          DATA_SOURCE = data;
+          highlightInitialTab(activeTab);
+          renderTabContent(activeTab);
+        });
+    });
+
+    function highlightInitialTab(tabKey) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${tabKey}'`)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function switchPortalTab(tabKey, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTabContent(tabKey);
+    }
+
+    function renderTabContent(tabKey) {
+      const box = document.getElementById('portalContentBox');
+      box.innerHTML = "";
+
+      if (tabKey === 'ca') {
+        box.innerHTML = DATA_SOURCE.currentAffairs.map(item => `
+          <article class="portal-card" id="${item.id}">
+            <div class="card-meta">
+              <span class="badge">${item.category}</span>
+              <span>${item.period}</span>
+            </div>
+            <h3 style="font-size:15px; color:#fff;">${item.title}</h3>
+            <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">${item.snippet}</p>
+          </article>
+        `).join('');
+      } else if (tabKey === 'tricks') {
+        box.innerHTML = DATA_SOURCE.gkTricks.map(item => `
+          <article class="portal-card" id="${item.id}">
+            <div class="card-meta"><span class="badge">GK Short Trick</span></div>
+            <h3 style="font-size:14px; color:#fff;">${item.topic}</h3>
+            <div class="trick-box">🎯 ट्रिक: "${item.trick}"</div>
+            <p style="font-size:12px; color:#cbd5e1; line-height:1.5; margin-top:4px;">${item.explanation}</p>
+          </article>
+        `).join('');
+      } else if (tabKey === 'history') {
+        box.innerHTML = DATA_SOURCE.todayHistory.map(item => `
+          <article class="portal-card">
+            <div class="card-meta"><span class="badge" style="background:rgba(255,215,0,0.15); color:var(--accent);">इतिहास पन्ना</span></div>
+            <h3 style="font-size:14px; color:#fff;">वर्ष ${item.year}: ${item.title}</h3>
+            <p style="font-size:12px; color:#cbd5e1; line-height:1.5;">${item.desc}</p>
+          </article>
+        `).join('');
+      }
+    }
+  </script>
+</body>
+</html>
