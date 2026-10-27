@@ -366,6 +366,42 @@
       border-top: 1px solid var(--card-border);
       margin-top: 20px;
     }
+    /* Jab contest band ho to form aur embed gayab rahega */
+.announcement-box.is-closed .iframe-embed-box,
+.announcement-box.is-closed #googleFormActionBtn,
+.announcement-box.is-closed a[href*="forms"] {
+  display: none !important;
+}
+.announcement-box.is-closed .closed-msg {
+  display: block !important;
+}
+.closed-msg {
+  display: none;
+  padding: 15px;
+  text-align: center;
+  background: rgba(229, 9, 20, 0.1);
+  border: 1px dashed var(--primary);
+  border-radius: 8px;
+  color: #ff9999;
+  font-size: 13px;
+  font-weight: bold;
+}
+.iframe-embed-box {
+  width: 100%;
+  height: 480px; /* Unchayi thodi badhayein */
+  border-radius: 10px;
+  overflow-y: auto; /* Scroll allow karein */
+  -webkit-overflow-scrolling: touch;
+  background: #0a0d14;
+}
+
+.iframe-embed-box iframe {
+  width: 100%;
+  min-height: 100%;
+  border: none;
+  display: block;
+}
+
   </style>
 </head>
 <body>
@@ -415,8 +451,62 @@
         <a href="Quizpage.html" class="btn btn-accent">🎯 Practice Daily Quiz Cards</a>
       </div>
     </section>
-
     <!-- 2. Expandable Announcement & Google Form Hub -->
+    <section class="announcement-box is-closed" id="contestSection">
+      
+      <!-- Top Clickable Bar -->
+      <div class="announcement-bar" onclick="toggleAnnouncement()">
+        <div class="announcement-title">
+          <span>📢</span>
+          <span>लाइव क्विज़ प्रतियोगिता: उत्तर फ़ॉर्म (Google Form)</span>
+        </div>
+        <span id="expandIcon" style="font-size: 13px; color: var(--accent);">▼ फ़ॉर्म खोलें</span>
+      </div>
+
+      <!-- Expandable Body Content -->
+      <div class="announcement-body" id="announcementBody">
+        
+        <!-- जब Contest बंद होगा तब सिर्फ यह मैसेज दिखेगा -->
+        <div class="closed-msg">
+          🚫 आज का लाइव कॉन्टेस्ट समाप्त हो चुका है! अगला कॉन्टेस्ट जल्द घोषित किया जाएगा।
+        </div>
+
+        <!-- नियम (जब Contest चालू होगा तब दिखेगा) -->
+        <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+          🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाया गया <em>Question Code</em> लिखें और 60 सेकंड के भीतर विकल्प चुनकर सबमिट करें।
+        </p>
+
+        <!-- Google Form Embed (जब Contest चालू होगा तब दिखेगा) -->
+        <div class="iframe-embed-box">
+          <iframe 
+            src="https://forms.gle/Zq6u4SUzHKr4xFUr6?embedded=true" 
+            title="Quiz Contest Google Form">
+            लोड हो रहा है…
+          </iframe>
+        </div>
+
+        <!-- External Tab Button (जब Contest चालू होगा तब दिखेगा) -->
+        <div style="margin-top: 12px; text-align: center;">
+          <a href="https://forms.gle/Zq6u4SUzHKr4xFUr6" target="_blank" class="btn btn-secondary" style="font-size: 12px; width: 100%; justify-content: center;">
+            ↗️ Google Form को अलग विंडो/टैब में खोलें (Open in New Tab)
+          </a>
+        </div>
+
+        <!-- ==============================================================
+             GOOGLE FORM OPTION 2: OPEN IN NEW TAB BUTTON
+             (क्लिक करने पर Google Form नए टैब में पूरा बड़ा खुलेगा)
+             ============================================================== --
+        <div style="margin-top: 12px; text-align: center;">
+          <!-- ⚠️ नीचे href="" में अपना Google Form का Short URL पेस्ट करें --
+          <a href="https://forms.gle/Zq6u4SUzHKr4xFUr6" target="_blank" class="btn btn-secondary" style="font-size: 12px; width: 100%; justify-content: center;">
+            ↗️ Google Form को अलग विंडो/टैब में खोलें (Open in New Tab)
+          </a>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- 2. Expandable Announcement & Google Form Hub --
     <section class="announcement-box" id="contestSection">
       <div class="announcement-bar" onclick="toggleAnnouncement()">
         <div class="announcement-title">
@@ -434,9 +524,9 @@
         <!-- ==============================================================
              GOOGLE FORM OPTION 1: EMBEDDED INSIDE HOMEPAGE (IFRAME)
              (अगर अंदर नहीं दिखाना हो, तो इस पूरे <div> को डिलीट या कमेंट कर दें)
-             ============================================================== -->
+             ============================================================== --
         <div class="iframe-embed-box">
-          <!-- ⚠️ नीचे src="" में अपने Google Form का लिंक डालें (अंत में ?embedded=true ज़रूर रखें) -->
+          <!-- ⚠️ नीचे src="" में अपने Google Form का लिंक डालें (अंत में ?embedded=true ज़रूर रखें) --
           <iframe 
             src="https://forms.gle/Zq6u4SUzHKr4xFUr6" ?embedded=true;
             title="Quiz Contest Google Form">
@@ -454,10 +544,10 @@
             ↗️ Google Form को अलग विंडो/टैब में खोलें (Open in New Tab)
           </a>
         </div>
-        -->
+        --
       </div>
     </section>
-
+-->
     <!-- 3. Feature Square Grid (2x2) -->
     <section class="feature-grid">
       <a href="Quizpage.html" class="square-card">
@@ -565,6 +655,16 @@
         icon.innerText = "▼ फ़ॉर्म खोलें";
       }
     }
+    // Right-click disable karne ke liye
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// F12 aur Ctrl+Shift+I (Inspect shortcut) block karne ke liye
+document.onkeydown = function(e) {
+  if (e.keyCode == 123) return false; // F12
+  if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+  if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // View Source
+};
+
   </script>
 </body>
 </html>
