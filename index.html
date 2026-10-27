@@ -645,27 +645,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 1. Render Headlines
+// 1. Render Headlines on Homepage (Clicking opens external news in new tab)
 function renderHeadlines(list) {
   const box = document.getElementById('headlinesContainer');
   box.innerHTML = list.map(item => `
-    <a href="${item.targetUrl}" class="headline-item">
+    <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="headline-item">
       <span><span class="hl-badge">${item.badge}</span> ${item.title}</span>
-      <span style="color:var(--text-muted); font-size:11px;">→</span>
+      <span style="color:var(--accent); font-size:11px; white-space:nowrap;">मूल खबर ↗</span>
     </a>
   `).join('');
 }
 
-// 2. Render History
-function renderHistory(list) {
+// 2. Render History & Today's Diwas automatically matching today's date
+function renderTodayHistoryAndDays(list) {
   const box = document.getElementById('historyItemsContainer');
-  box.innerHTML = list.map(h => `
-    <div class="history-entry">
-      <div><strong>वर्ष ${h.year} - ${h.title}</strong></div>
-      <div style="color:#cbd5e1; margin-top:3px;">${h.desc}</div>
-    </div>
-  `).join('');
+  const now = new Date();
+  
+  // Format current date as MM-DD (e.g. "10-27")
+  const currentKey = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  
+  // Find matching date entry or fallback to first
+  const todayEntry = list.find(item => item.dateKey === currentKey) || list[0];
+
+  if (!todayEntry) return;
+
+  box.innerHTML = `
+    ${todayEntry.importantDays && todayEntry.importantDays.length > 0 ? `
+      <div style="background:rgba(16,185,129,0.12); border-left:3px solid var(--success); padding:8px 10px; border-radius:6px; font-size:12px; color:#a7f3d0; margin-bottom:8px;">
+        🌟 <strong>आज का दिवस:</strong> ${todayEntry.importantDays.join(', ')}
+      </div>
+    ` : ''}
+    ${todayEntry.historyEvents.map(h => `
+      <div class="history-entry">
+        <strong>वर्ष ${h.year}:</strong> ${h.event}
+      </div>
+    `).join('')}
+  `;
 }
+
 
 // 3. Dual-Mode Poll Engine
 function initPollEngine(pollData) {
