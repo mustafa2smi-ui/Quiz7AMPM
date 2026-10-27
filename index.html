@@ -644,7 +644,30 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("JSON fetch error:", err);
     });
 });
+/*
+// 1. Render Headlines
+function renderHeadlines(list) {
+  const box = document.getElementById('headlinesContainer');
+  box.innerHTML = list.map(item => `
+    <a href="${item.targetUrl}" class="headline-item">
+      <span><span class="hl-badge">${item.badge}</span> ${item.title}</span>
+      <span style="color:var(--text-muted); font-size:11px;">→</span>
+    </a>
+  `).join('');
+}
 
+// 2. Render History
+function renderHistory(list) {
+  const box = document.getElementById('historyItemsContainer');
+  box.innerHTML = list.map(h => `
+    <div class="history-entry">
+      <div><strong>वर्ष ${h.year} - ${h.title}</strong></div>
+      <div style="color:#cbd5e1; margin-top:3px;">${h.desc}</div>
+    </div>
+  `).join('');
+}
+
+*/
 // 1. Render Headlines on Homepage (Clicking opens external news in new tab)
 function renderHeadlines(list) {
   const box = document.getElementById('headlinesContainer');
