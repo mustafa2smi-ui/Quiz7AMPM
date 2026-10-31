@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Policies, Rules & FAQ - QUIZ 7AMPM</title>
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#e50914">
+
+  <style>
+    :root {
+      --bg-dark: #090c12;
+      --card-bg: rgba(20, 25, 38, 0.95);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #e50914;
+      --accent: #ffd700;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 60px; line-height: 1.6; }
+
+    /* Header */
+    .legal-header {
+      background: rgba(9, 12, 18, 0.98); border-bottom: 1px solid var(--card-border);
+      padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+    }
+    .brand-title { font-weight: 800; font-size: 16px; color: #fff; }
+    .brand-title span { color: var(--accent); }
+    .lang-btn {
+      background: rgba(255,215,0,0.15); border: 1px solid var(--accent); color: var(--accent);
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+
+    .main-wrap { max-width: 900px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Tabs Bar */
+    .tab-bar {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-item {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+      color: var(--text-muted); padding: 8px 16px; border-radius: 8px; font-size: 13px;
+      font-weight: 700; white-space: nowrap; cursor: pointer; text-decoration: none;
+    }
+    .tab-item.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Content Card */
+    .policy-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px;
+    }
+    h2 { font-size: 18px; color: var(--accent); border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+    h3 { font-size: 14px; color: #fff; margin-top: 10px; }
+    p, li { font-size: 13px; color: #cbd5e1; }
+    ul { margin-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+
+    .highlight-box {
+      background: rgba(229, 9, 20, 0.1); border-left: 3px solid var(--primary);
+      padding: 12px; border-radius: 6px; font-size: 12px; color: #fca5a5;
+    }
+
+    /* Accordion for FAQ */
+    .faq-item {
+      border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 8px; overflow: hidden;
+    }
+    .faq-q {
+      background: rgba(255,255,255,0.03); padding: 12px 14px; font-size: 13px; font-weight: 700;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-a { display: none; padding: 12px 14px; font-size: 12px; color: #cbd5e1; background: rgba(0,0,0,0.2); }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-q { color: var(--accent); }
+
+    .back-home { color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="legal-header">
+    <div class="brand-title">QUIZ <span>7AMPM</span> LEGAL</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="lang-btn" onclick="toggleLanguage()" id="langSwitcherBtn">English में पढ़ें</button>
+      <a href="index.html" class="back-home">← होमपेज</a>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <!-- Tab Navigation -->
+    <div class="tab-bar">
+      <button class="tab-item active" onclick="showLegalTab('rules', this)">🏆 Contest Rules (प्रतियोगिता नियम)</button>
+      <button class="tab-item" onclick="showLegalTab('terms', this)">📜 Terms & Conditions (नियम व शर्तें)</button>
+      <button class="tab-item" onclick="showLegalTab('privacy', this)">🔒 Privacy Policy (गोपनीयता नीति)</button>
+      <button class="tab-item" onclick="showLegalTab('disclaimer', this)">⚠️ Disclaimer (अस्वीकरण)</button>
+      <button class="tab-item" onclick="showLegalTab('faq', this)">❓ FAQ (सामान्य सवाल)</button>
+    </div>
+
+    <!-- Content Card Box -->
+    <article class="policy-card" id="policyCardContent">
+      <!-- Populated dynamically via JS -->
+    </article>
+  </main>
+
+  <script>
+    /* ================================================================
+       EASY CONFIGURATION: एक जगह बदलें, पूरे लीगल पेजों पर बदल जाएगा
+       ================================================================ */
+    const LEGAL_CONFIG = {
+      siteName: "QUIZ 7AMPM",
+      channelName: "QUIZ 7AMPM Official YouTube Channel",
+      contactEmail: "help.quiz7ampm@gmail.com",
+      lastUpdatedHindi: "अक्टूबर 2026",
+      lastUpdatedEnglish: "October 2026"
+    };
+
+    let currentLang = 'hi'; // 'hi' or 'en'
+    let currentTab = 'rules';
+
+    const LEGAL_CONTENT = {
+      // 1. CONTEST & PRIZE RULES
+      rules: {
+        hi: {
+          title: "लाइव क्विज़ प्रतियोगिता नियम एवं पुरस्कार नीति",
+          html: `
+            <div class="highlight-box">
+              ⚠️ <strong>महत्वपूर्ण सूचना:</strong> QUIZ 7AMPM का कोई भी लाइव कॉन्टेस्ट किसी प्रकार का जुआ, सट्टा या लॉटरी नहीं है। यह पूर्णतः ज्ञान, एकाग्रता और गति पर आधारित एक शैक्षिक कौशल प्रतियोगिता (Skill-Based Educational Contest) है। इसमें भाग लेना 100% निःशुल्क है।
+            </div>
+            <h3>1. पात्रता (Eligibility)</h3>
+            <ul>
+              <li>प्रतियोगिता में भाग लेने के लिए भारत का नागरिक होना अनिवार्य है।</li>
+              <li>प्रतिभागी के पास एक वैध WhatsApp नंबर और वैध UPI ID (Google Pay, PhonePe, Paytm आदि) होना आवश्यक है।</li>
+            </ul>
+            <h3>2. उत्तर सबमिशन प्रक्रिया</h3>
+            <ul>
+              <li>लाइव स्ट्रीम में दिखाए गए प्रश्न के साथ दिया गया 3-अंकों का <strong>Question Code</strong> सही भरना अनिवार्य है।</li>
+              <li>सवाल स्क्रीन पर आने के ठीक 60 सेकंड के अंदर ही Google Form में सबमिट किया गया उत्तर मान्य होगा।</li>
+              <li><strong>पहला प्रयास नियम (First Attempt Rule):</strong> एक प्रतिभागी द्वारा दिए गए कई जवाबों में से केवल उसके पहले जवाब (Earliest Timestamp) को ही आधिकारिक माना जाएगा।</li>
+            </ul>
+            <h3>3. विजेता चयन प्रक्रिया</h3>
+            <ul>
+              <li><strong>Top 10 Fast Winners:</strong> सही उत्तर सबसे कम समय (सेकंड्स) में सबमिट करने वाले शीर्ष 10 प्रतिभागी विजेता होंगे।</li>
+              <li><strong>9 Lucky Draw Winners:</strong> शीर्ष 10 विजेताओं को छोड़कर शेष सभी सही उत्तरदाताओं में से रैंडम पारदर्शी डिजिटल लॉटरी द्वारा 3 राउंड्स में कुल 9 विजेता चुने जाएंगे।</li>
+            </ul>
+            <h3>4. पुरस्कार वितरण एवं दावा (Claim)</h3>
+            <ul>
+              <li><strong>1 व्यक्ति = 1 UPI ID नियम:</strong> एक लाइव सत्र में एक व्यक्ति या एक UPI ID पर केवल एक ही पुरस्कार दिया जाएगा।</li>
+              <li>इनाम राशि केवल उसी WhatsApp नंबर से संपर्क करने पर दी जाएगी जो फॉर्म में सबमिट किया गया था। किसी अन्य नंबर से किया गया दावा अमान्य होगा।</li>
+              <li>विजेता को लाइव समाप्त होने के 24 घंटे के भीतर अपना UPI ID या QR कोड प्रदान करना होगा।</li>
+            </ul>
+          `
+        },
+        en: {
+          title: "Live Contest Rules & Prize Policy",
+          html: `
+            <div class="highlight-box">
+              ⚠️ <strong>Important Notice:</strong> QUIZ 7AMPM contests are strictly skill-based educational quizzes. They do not constitute gambling, betting, or lottery under applicable Indian laws. Participation is 100% FREE.
+            </div>
+            <h3>1. Eligibility</h3>
+            <ul>
+              <li>Open to all residents of India.</li>
+              <li>Participants must possess an active WhatsApp number and a valid Indian UPI address (GPay/PhonePe/Paytm).</li>
+            </ul>
+            <h3>2. Submission Criteria</h3>
+            <ul>
+              <li>The 3-digit Question Code displayed during the YouTube live stream must be accurately entered.</li>
+              <li>Responses submitted within the 60-second timer window are eligible.</li>
+              <li><strong>First-Attempt Rule:</strong> If multiple entries are submitted by a participant for a single question, only the earliest timestamped entry will be considered.</li>
+            </ul>
+            <h3>3. Winner Determination</h3>
+            <ul>
+              <li><strong>Top 10 Fast Winners:</strong> The earliest 10 correct submissions based strictly on Google Sheet timestamps.</li>
+              <li><strong>9 Lucky Draw Winners:</strong> Filtered from the remaining correct submissions using automated, unbiased digital randomization across 3 rounds.</li>
+            </ul>
+            <h3>4. Prize Settlement</h3>
+            <ul>
+              <li><strong>Single UPI Policy:</strong> Only one prize payout per person/UPI ID per live streaming event.</li>
+              <li>Prizes are settled exclusively via the contact number registered in the submission form. Unverified numbers will forfeit the award.</li>
+            </ul>
+          `
+        }
+      },
+
+      // 2. TERMS AND CONDITIONS
+      terms: {
+        hi: {
+          title: "नियम एवं शर्तें (Terms & Conditions)",
+          html: `
+            <p>अंतिम नवीनीकरण: ${LEGAL_CONFIG.lastUpdatedHindi}</p>
+            <p>${LEGAL_CONFIG.siteName} वेबसाइट या यूट्यूब लाइव प्रतियोगिता का उपयोग करने पर आप निम्नलिखित शर्तों से बाध्य होने की सहमति देते हैं:</p>
+            <h3>1. शैक्षिक उद्देश्य</h3>
+            <p>यह मंच केवल सामान्य ज्ञान, प्रतियोगी परीक्षाओं की तैयारी और शैक्षणिक जागरूकता के लिए संचालित है।</p>
+            <h3>2. बौद्धिक संपदा (Intellectual Property)</h3>
+            <p>वेबसाइट पर उपलब्ध प्रश्नोत्तरी, ट्रिक कोड्स और सामग्री ${LEGAL_CONFIG.siteName} द्वारा संकलित हैं। इसका अनाधिकृत व्यावसायिक पुनरुत्पादन प्रतिबंधित है।</p>
+            <h3>3. तकनीकी त्रुटि एवं इंटरनेट विलंब</h3>
+            <p>प्रतिभागी के धीमे इंटरनेट, मोबाइल नेटवर्क विफलता या सर्वर लैग के कारण फॉर्म सबमिशन में होने वाली देरी के लिए आयोजक जिम्मेदार नहीं होंगे। अंतिम निर्णय Google Sheet में दर्ज आधिकारिक टाइमस्टैम्प के आधार पर होगा।</p>
+            <h3>4. आयोजक का विवेकाधिकार</h3>
+            <p>अनुचित साधनों, बॉट्स या स्पैम सबमिशन का उपयोग करने वाले किसी भी प्रतिभागी को बिना पूर्व सूचना अयोग्य घोषित करने का पूर्ण अधिकार आयोजकों के पास सुरक्षित है।</p>
+          `
+        },
+        en: {
+          title: "Terms and Conditions",
+          html: `
+            <p>Last Updated: ${LEGAL_CONFIG.lastUpdatedEnglish}</p>
+            <p>By accessing ${LEGAL_CONFIG.siteName} and participating in our contests, you agree to comply with the following terms:</p>
+            <h3>1. Educational Purpose</h3>
+            <p>All content provided on this portal is strictly intended for educational, examination prep, and general knowledge enrichment.</p>
+            <h3>2. Network Latency & Technical Issues</h3>
+            <p>The organizers are not liable for transmission delays, local internet outages, or device lag experienced by users. Qualification is determined exclusively by the official server-side timestamps recorded in Google Sheets.</p>
+            <h3>3. Right to Disqualify</h3>
+            <p>We reserve the unconditional right to disqualify any participant attempting automation, multi-accounting, harassment, or fraudulent prize claims.</p>
+          `
+        }
+      },
+
+      // 3. PRIVACY POLICY
+      privacy: {
+        hi: {
+          title: "गोपनीयता नीति (Privacy Policy)",
+          html: `
+            <p>अंतिम नवीनीकरण: ${LEGAL_CONFIG.lastUpdatedHindi}</p>
+            <p>${LEGAL_CONFIG.siteName} आपकी व्यक्तिगत जानकारी की सुरक्षा के प्रति पूरी तरह प्रतिबद्ध है।</p>
+            <h3>1. हम कौन सा डेटा एकत्र करते हैं?</h3>
+            <ul>
+              <li>प्रतिभागी का नाम और शहर (पारदर्शिता हेतु सार्वजनिक प्रदर्शन के लिए)।</li>
+              <li>WhatsApp / संपर्क नंबर (केवल पुरस्कार वितरण व सत्यापन के लिए)।</li>
+            </ul>
+            <h3>2. डेटा सुरक्षा एवं गोपनीयता गारंटी</h3>
+            <ul>
+              <li><strong>पब्लिक शीट में मोबाइल नंबर कभी नहीं दिखाया जाता।</strong> सार्वजनिक स्क्रीन पर केवल नाम और शहर दिखाई देता है।</li>
+              <li>हम आपका मोबाइल नंबर किसी भी थर्ड-पार्टी कंपनी, विज्ञापनदाता या टेलीमार्केटर को कभी नहीं बेचते या साझा करते हैं।</li>
+            </ul>
+            <h3>3. डेटा हटाना (Data Retention)</h3>
+            <p>लाइव क्विज़ के विजेताओं को पुरस्कार वितरित करने और आवश्यक सत्यापन पूर्ण होने के पश्चात फ़ॉर्म रिस्पॉन्स डेटा को समय-समय पर सुरक्षित रूप से साफ़ (Delete) कर दिया जाता है।</p>
+            <p>संपर्क हेतु ईमेल: <strong>${LEGAL_CONFIG.contactEmail}</strong></p>
+          `
+        },
+        en: {
+          title: "Privacy Policy",
+          html: `
+            <p>Last Updated: ${LEGAL_CONFIG.lastUpdatedEnglish}</p>
+            <p>${LEGAL_CONFIG.siteName} takes your data privacy seriously. This policy explains our data practices:</p>
+            <h3>1. Information Collected</h3>
+            <ul>
+              <li>Participant Name and City (displayed publicly for live transparency).</li>
+              <li>WhatsApp Contact Number (collected solely for prize verification and payout dispatch).</li>
+            </ul>
+            <h3>2. Public Shielding Guarantee</h3>
+            <ul>
+              <li><strong>Contact numbers are strictly masked</strong> from our public-facing Google Sheets. Only administrative personnel have access during prize processing.</li>
+              <li>We never sell, rent, or distribute personal phone numbers to any third-party marketing entities.</li>
+            </ul>
+            <h3>3. Data Purging</h3>
+            <p>Submission entries are regularly cleared from our active database once prizes are acknowledged and verified.</p>
+            <p>Inquiries: <strong>${LEGAL_CONFIG.contactEmail}</strong></p>
+          `
+        }
+      },
+
+      // 4. DISCLAIMER
+      disclaimer: {
+        hi: {
+          title: "अस्वीकरण (Disclaimer)",
+          html: `
+            <h3>1. YouTube से असंबद्धता</h3>
+            <p>यह प्रतियोगिता ${LEGAL_CONFIG.channelName} द्वारा स्वतंत्र रूप से आयोजित की जाती है। यह किसी भी रूप में YouTube LLC या Google LLC द्वारा प्रायोजित, समर्थित या प्रशासित नहीं है। प्रतिभागी YouTube को इस प्रतियोगिता के संबंध में सभी दायित्वों से मुक्त करते हैं।</p>
+            <h3>2. समाचार व करेंट अफेयर्स सामग्री</h3>
+            <p>पोर्टल पर दी गई सुर्खियां और करेंट अफेयर्स विभिन्न विश्वसनीय सार्वजनिक समाचार माध्यमों से छात्रों के अध्ययन हेतु संकलित किए गए हैं। मूल खबरों का सर्वाधिकार संबंधित समाचार संस्थानों का है।</p>
+            <h3>3. वित्तीय जोखिम का अभाव</h3>
+            <p>इस वेबसाइट पर किसी भी प्रकार का प्रवेश शुल्क (Entry Fee) या वित्तीय जमा स्वीकार नहीं किया जाता है। किसी भी व्यक्ति द्वारा पैसे मांगकर जीत की गारंटी देने वाले दावों से सावधान रहें।</p>
+          `
+        },
+        en: {
+          title: "Legal Disclaimer",
+          html: `
+            <h3>1. YouTube Non-Affiliation</h3>
+            <p>This contest is operated independently by ${LEGAL_CONFIG.channelName}. It is not sponsored, endorsed, administered by, or associated with YouTube LLC or Google LLC. Participants fully release YouTube from any liabilities associated with this contest.</p>
+            <h3>2. Content Attribution</h3>
+            <p>Headlines and news summaries are aggregated for educational purposes from public media sources. All proprietary copyrights belong to their respective publishers.</p>
+            <h3>3. No Financial Risk</h3>
+            <p>Participation is completely free of charge. We never request entry fees, deposits, or sensitive banking credentials.</p>
+          `
+        }
+      },
+
+      // 5. FAQ
+      faq: {
+        hi: {
+          title: "अक्सर पूछे जाने वाले सवाल (Frequently Asked Questions)",
+          html: `
+            <div class="faq-item open">
+              <div class="faq-q" onclick="toggleFaq(this)">Q1. क्या प्रतियोगिता में भाग लेने के लिए कोई फ़ीस है? <span>▼</span></div>
+              <div class="faq-a">नहीं, यह 100% मुफ़्त है। किसी भी छात्र से कोई शुल्क नहीं लिया जाता।</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q2. मुझे Question Code कहाँ से मिलेगा? <span>▼</span></div>
+              <div class="faq-a">Question Code (उदा. 3-अंक का नंबर) यूट्यूब लाइव स्ट्रीम के दौरान सवाल के साथ स्क्रीन पर दिखाया जाता है।</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q3. क्या मैं एक से अधिक बार उत्तर सबमिट कर सकता हूँ? <span>▼</span></div>
+              <div class="faq-a">आप कर सकते हैं, लेकिन हमारा सिस्टम केवल आपके सबसे पहले सबमिशन (First Attempt) को ही मान्य गिनेगा। बाकी सबमिशन स्वतः रद्द हो जाएंगे।</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q4. विजेता चुने जाने के बाद इनाम कैसे मिलता है? <span>▼</span></div>
+              <div class="faq-a">लाइव समाप्त होने के बाद हमारी टीम आपके फॉर्म में दिए गए WhatsApp नंबर पर संपर्क करेगी और UPI द्वारा नकद पुरस्कार सीधे आपके खाते में भेज दिया जाएगा।</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q5. क्या मेरी निजी जानकारी सुरक्षित है? <span>▼</span></div>
+              <div class="faq-a">हाँ, बिल्कुल! आपका WhatsApp नंबर पब्लिक शीट में कभी नहीं दिखाया जाता। वह पूरी तरह एन्क्रिप्टेड और सुरक्षित रहता है।</div>
+            </div>
+          `
+        },
+        en: {
+          title: "Frequently Asked Questions (FAQ)",
+          html: `
+            <div class="faq-item open">
+              <div class="faq-q" onclick="toggleFaq(this)">Q1. Is there an entry fee to join the quiz? <span>▼</span></div>
+              <div class="faq-a">No. All our quizzes and contests are 100% free of cost.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q2. Where do I find the Question Code? <span>▼</span></div>
+              <div class="faq-a">The 3-digit Question Code is displayed directly on the video screen during the YouTube live broadcast.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q3. Can I submit multiple answers for a single question? <span>▼</span></div>
+              <div class="faq-a">You may only have your first recorded submission counted. Any subsequent submissions are automatically disregarded by our deduplication engine.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q4. How are winners paid? <span>▼</span></div>
+              <div class="faq-a">Winners are contacted directly via the WhatsApp number entered in their submission form. Prize money is disbursed via UPI transfer within 24 hours.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" onclick="toggleFaq(this)">Q5. Is my WhatsApp number publicly exposed? <span>▼</span></div>
+              <div class="faq-a">Never. Public display sheets strictly exclude phone numbers. Only names and locations are displayed for transparency.</div>
+            </div>
+          `
+        }
+      }
+    };
+
+    function renderPolicy() {
+      const container = document.getElementById('policyCardContent');
+      const data = LEGAL_CONTENT[currentTab][currentLang];
+      container.innerHTML = `
+        <h2>${data.title}</h2>
+        ${data.html}
+      `;
+    }
+
+    function showLegalTab(tabKey, btn) {
+      currentTab = tabKey;
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPolicy();
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'hi' ? 'en' : 'hi';
+      document.getElementById('langSwitcherBtn').innerText = currentLang === 'hi' ? 'English में पढ़ें' : 'हिन्दी में पढ़ें';
+      renderPolicy();
+    }
+
+    function toggleFaq(el) {
+      const parent = el.parentElement;
+      parent.classList.toggle('open');
+    }
+
+    // Auto-load on start
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam && LEGAL_CONTENT[tabParam]) {
+        currentTab = tabParam;
+        document.querySelectorAll('.tab-item').forEach(b => {
+          if (b.getAttribute('onclick').includes(`'${tabParam}'`)) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+      }
+      renderPolicy();
+    });
+  </script>
+</body>
+</html>
