@@ -355,17 +355,19 @@
       </div>
     </section>
 
-    <!-- 4. Real / Demo Poll Engine -->
+        <!-- 4. Poll of the Day (Google Form Powered) -->
     <section class="widget-box" id="pollSection">
       <div class="widget-header">
         <h3>📊 आज का पोल (Poll of the Day)</h3>
-        <span id="pollModeStatusBadge" style="font-size: 10px; color: var(--text-muted);">वोट करें</span>
+        <span style="font-size: 10px; color: var(--accent); background: rgba(255,215,0,0.1); padding: 3px 8px; border-radius: 10px;">🔴 Live Voting</span>
       </div>
-      <p style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #fff;" id="pollQuestionText">
-        प्रश्न लोड हो रहा है...
-      </p>
-      <div class="poll-container" id="pollItemsContainer"></div>
+      <div class="iframe-embed-box" style="height: 330px; margin-top: 6px; background: #fff;">
+        <iframe id="pollFormIframe" src="" title="Poll of the Day">
+          पोल लोड हो रहा है…
+        </iframe>
+      </div>
     </section>
+
 
     <!-- 5. Today's History & Important Diwas Section -->
     <section class="widget-box" id="historySection" style="border-left: 4px solid var(--accent);">
@@ -467,13 +469,20 @@
     /* ================================================================
        👉 1-POINT MASTER CONFIGURATION
        ================================================================ */
-    const SITE_CONFIG = {
+        const SITE_CONFIG = {
       isLive: true,
       closedNotice: "🚫 आज का लाइव क्विज़ समाप्त हो चुका है! अगला कॉन्टेस्ट कल शाम 7:00 PM पर शुरू होगा।",
       showRules: true,
       rulesText: "🔴 <strong>नियम:</strong> लाइव स्क्रीन पर दिखाया गया <em>Question Code (3-अंक)</em> लिखें और 60 सेकंड के भीतर सही विकल्प चुनकर सबमिट करें।",
+      
+      // Live Quiz Form URLs
       formUrl: "https://forms.gle/Zq6u4SUzHKr4xFUr6",
       formEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_AAPKA_FORM_ID/viewform?embedded=true",
+      
+      // 👉 YAHAN APNA POLL WALE GOOGLE FORM KA EMBED LINK DAALEIN:
+      pollFormEmbedUrl: "https://docs.google.com/forms/d/e/AAPKA_POLL_FORM_ID/viewform?embedded=true",
+
+      // Public Sheet URLs
       publicSheetUrl: "https://docs.google.com/spreadsheets/d/YOUR_PUBLIC_SHEET_ID/edit?usp=sharing",
       publicSheetEmbedUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR_YOUR_ID/pubhtml?widget=true&headers=false",
       shareMessage: "🔥 *QUIZ 7AMPM - लाइव क्विज़ प्रतियोगिता*\nरोज़ाना लाइव क्विज़ में हिस्सा लें और लकी विनर बनें!\n👉 अभी जुड़ें: "
@@ -486,7 +495,7 @@
 
     let GLOBAL_DATA = null;
 
-    /* ================= INITIALIZATION ================= */
+    /* ================= INITIALIZATION ================= *
     document.addEventListener('DOMContentLoaded', () => {
       applyMasterConfig();
 
@@ -529,6 +538,27 @@
           if (p) p.innerText = "⚠️ डेटा लोड करने में समस्या आई। कृपया 7ampmdata.json फ़ाइल चेक करें।";
         });
     });
+    */
+    document.addEventListener('DOMContentLoaded', () => {
+      applyMasterConfig();
+
+      // Show Current Date in Hindi
+      const d = new Date();
+      const dateEl = document.getElementById('todayDateLabel');
+      if (dateEl) {
+        dateEl.innerText = d.toLocaleDateString('hi-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      // Fetch Centralized JSON Data
+      fetch('7ampmdata.json')
+        .then(res => res.json())
+        .then(data => {
+          GLOBAL_DATA = data;
+          if (data.headlines) renderHeadlines(data.headlines);
+          if (data.historyAndDays) renderTodayHistoryAndDays(data.historyAndDays);
+        })
+        .catch(err => console.error("JSON fetch error:", err));
+    });
 
     /* ================= MASTER LAYOUT LOGIC ================= */
     function applyMasterConfig() {
@@ -564,6 +594,11 @@
       formBtn.href = SITE_CONFIG.formUrl;
       sheetIframe.src = SITE_CONFIG.publicSheetEmbedUrl;
       sheetBtn.href = SITE_CONFIG.publicSheetUrl;
+    // Poll Iframe me link set karein
+      const pollIframe = document.getElementById('pollFormIframe');
+      if (pollIframe) {
+        pollIframe.src = SITE_CONFIG.pollFormEmbedUrl;
+      }
     }
 
     function toggleDrawer() {
@@ -631,93 +666,6 @@
       }
 
       box.innerHTML = diwasHtml + eventsHtml;
-    }
-
-    /* ================= 3. DUAL-MODE POLL ENGINE ================= */
-    function initPollEngine(pollData) {
-      const isLiveScript = POLL_ENGINE_CONFIG.appsScriptUrl.trim() !== "";
-      const badge = document.getElementById('pollModeStatusBadge');
-      document.getElementById('pollQuestionText').innerText = pollData.question;
-
-      if (isLiveScript) {
-        badge.innerText = "🌐 लाइव वोटिंग";
-        fetchLivePollResults(pollData);
-      } else {
-        badge.innerText = "⚡ डेमो मोड (स्थानीय)";
-        renderPollUI(pollData, null, false);
-      }
-    }
-
-    function renderPollUI(pollData, liveVotesMap, isLive) {
-      const container = document.getElementById('pollItemsContainer');
-      if (!container) return;
-
-      const userVote = localStorage.getItem(pollData.id);
-      const isVoted = userVote !== null;
-
-      if (isVoted) {
-        container.classList.add('poll-locked');
-        const badge = document.getElementById('pollModeStatusBadge');
-        if (badge) {
-          badge.innerText = "✅ आपने वोट दे दिया";
-          badge.style.color = "var(--success)";
-        }
-      }
-
-      let totalVotes = 0;
-      pollData.options.forEach((opt, idx) => {
-        let count = 0;
-        if (isLive && liveVotesMap) {
-          count = liveVotesMap[opt.id] || 0;
-        } else {
-          count = (opt.demoVotes || 0) + (userVote == idx ? 1 : 0);
-        }
-        opt._currentCount = count;
-        totalVotes += count;
-      });
-
-      container.innerHTML = pollData.options.map((opt, idx) => {
-        const pct = totalVotes > 0 ? Math.round((opt._currentCount / totalVotes) * 100) : 0;
-        return `
-          <div class="poll-choice" onclick="handlePollClick(${idx}, '${opt.id}')">
-            <div class="poll-fill-bar" style="width: ${isVoted ? pct : 0}%"></div>
-            <span class="poll-text">${opt.text}</span>
-            <span class="poll-stat">${pct}% (${opt._currentCount})</span>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function handlePollClick(index, optionId) {
-      const poll = GLOBAL_DATA.poll;
-      if (localStorage.getItem(poll.id)) return; // Already voted
-
-      localStorage.setItem(poll.id, index);
-
-      const isLiveScript = POLL_ENGINE_CONFIG.appsScriptUrl.trim() !== "";
-      if (isLiveScript) {
-        fetch(POLL_ENGINE_CONFIG.appsScriptUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pollId: poll.id, optionId: optionId })
-        }).then(() => {
-          fetchLivePollResults(poll);
-        });
-      } else {
-        renderPollUI(poll, null, false);
-      }
-    }
-
-    function fetchLivePollResults(pollData) {
-      fetch(`${POLL_ENGINE_CONFIG.appsScriptUrl}?pollId=${pollData.id}`)
-        .then(r => r.json())
-        .then(liveVotes => {
-          renderPollUI(pollData, liveVotes, true);
-        })
-        .catch(() => {
-          renderPollUI(pollData, null, false);
-        });
     }
   </script>
 </body>
